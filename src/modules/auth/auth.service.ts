@@ -10,7 +10,7 @@ import { User } from "../user/user.model";
 const credentialLogin = async (payload: Partial<IUser>) => {
   const { phone, password } = payload;
 
-  const isUserExist = await User.findOne({ phone });
+  const isUserExist = await User.findOne({ phone }).select("+password");
 
   if (!isUserExist) {
     throw new AppError(StatusCodes.NOT_FOUND, "User not found");
@@ -20,6 +20,7 @@ const credentialLogin = async (payload: Partial<IUser>) => {
     password as string,
     isUserExist.password
   );
+
   if (!isPasswordMatched) {
     throw new AppError(StatusCodes.UNAUTHORIZED, "Password is incorrect");
   }

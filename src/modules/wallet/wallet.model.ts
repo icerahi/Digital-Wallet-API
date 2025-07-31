@@ -9,9 +9,9 @@ import { Transaction } from "../transaction/transaction.model";
 import { IWallet, IWalletStaticMethods } from "./wallet.interface";
 
 const walletSchema = new Schema<IWallet, IWalletStaticMethods>({
-  owner: { type: Schema.Types.ObjectId, ref: "User" },
   balance: { type: Number, min: 0, default: 50 },
   isBlocked: { type: Boolean, default: false },
+  owner: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 //add money
@@ -62,23 +62,18 @@ walletSchema.statics.withdrawMoney = async function (
   return wallet;
 };
 
-walletSchema.statics.sendMoney = async function (payload) {
-  const { sender, receiver, amount } = payload;
-  const senderWallet = await Wallet.findOne({ owner: sender });
-  const receiverWallet = await Wallet.findOne({ owner: receiver });
-
-  if (sender === receiver) {
-    throw new AppError(
-      StatusCodes.FORBIDDEN,
-      "The sender and receiver must be different entities. Choose a valid receiver."
-    );
-  }
+walletSchema.statics.sendMoney = async function (senderId, receiverId, amount) {
+  const senderWallet = await Wallet.findOne({ owner: senderId });
+  const receiverWallet = await Wallet.findOne({ owner: receiverId });
 
   if (!senderWallet)
-    throw new AppError(StatusCodes.NOT_FOUND, "Sender does not exist");
+    throw new AppError(StatusCodes.NOT_FOUND, "Sender Wallet does not exist");
 
   if (!receiverWallet)
-    throw new AppError(StatusCodes.NOT_FOUND, "Receiver does not exist");
+    throw new AppError(StatusCodes.NOT_FOUND, "Receiver Wallet does not exist");
+
+  if (receiverWallet.isBlocked)
+    throw new AppError(StatusCodes.NOT_FOUND, "Receiver Wallet is blocked");
 
   if (senderWallet.balance < amount) {
     throw new AppError(StatusCodes.FORBIDDEN, "Insufficient balance!");
@@ -102,16 +97,18 @@ walletSchema.statics.sendMoney = async function (payload) {
   return senderWallet;
 };
 
-walletSchema.statics.cashIn = async function (payload) {
-  const { sender, receiver, amount } = payload;
-  const senderWallet = await Wallet.findOne({ owner: sender });
-  const receiverWallet = await Wallet.findOne({ owner: receiver });
+walletSchema.statics.cashIn = async function (senderId, receiverId, amount) {
+  const senderWallet = await Wallet.findOne({ owner: senderId });
+  const receiverWallet = await Wallet.findOne({ owner: receiverId });
 
   if (!senderWallet)
-    throw new AppError(StatusCodes.NOT_FOUND, "Sender does not exist");
+    throw new AppError(StatusCodes.NOT_FOUND, "Sender Wallet does not exist");
 
   if (!receiverWallet)
-    throw new AppError(StatusCodes.NOT_FOUND, "Receiver does not exist");
+    throw new AppError(StatusCodes.NOT_FOUND, "Receiver Wallet does not exist");
+
+  if (receiverWallet.isBlocked)
+    throw new AppError(StatusCodes.NOT_FOUND, "Receiver Wallet is blocked");
 
   if (senderWallet.balance < amount) {
     throw new AppError(StatusCodes.FORBIDDEN, "Insufficient balance!");
@@ -125,6 +122,40 @@ walletSchema.statics.cashIn = async function (payload) {
   //add transaction record
   const transactionInfo = await Transaction.create({
     type: TransactionType.CASH_IN,
+    sender: senderWallet.owner,
+    receiver: receiverWallet.owner,
+    amount,
+    status: TransactionStatus.COMPLETED,
+  });
+
+  return transactionInfo.populate("sender receiver", "fullname phone role");
+};
+
+walletSchema.statics.cashOut = async function (senderId, receiverId, amount) {
+  const senderWallet = await Wallet.findOne({ owner: senderId });
+  const receiverWallet = await Wallet.findOne({ owner: receiverId });
+
+  if (!senderWallet)
+    throw new AppError(StatusCodes.NOT_FOUND, "Sender does not exist");
+
+  if (senderWallet.isBlocked)
+    throw new AppError(StatusCodes.NOT_FOUND, "Sender Wallet is blocked");
+
+  if (!receiverWallet)
+    throw new AppError(StatusCodes.NOT_FOUND, "Receiver does not exist");
+
+  if (senderWallet.balance < amount) {
+    throw new AppError(StatusCodes.FORBIDDEN, "Insufficient balance!");
+  }
+
+  senderWallet.balance -= amount;
+  receiverWallet.balance += amount;
+  await senderWallet.save();
+  await senderWallet.save();
+
+  //store transaction record
+  const transactionInfo = await Transaction.create({
+    type: TransactionType.CASH_OUT,
     sender: senderWallet.owner,
     receiver: receiverWallet.owner,
     amount,

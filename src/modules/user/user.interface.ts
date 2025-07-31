@@ -13,5 +13,5 @@ export interface IUser {
   phone: string;
   password: string;
   role?: Role;
-  isAgentApproved?: boolean;
+  agentApproval?: boolean;
 }

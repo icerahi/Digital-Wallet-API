@@ -6,18 +6,29 @@ const userSchema = new Schema<IUser>(
   {
     fullname: { type: String, required: true },
     phone: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: false },
     role: { type: String, enum: Object.values(Role), default: Role.USER },
-    // isAgentApproved:{type:Boolean,default:true}
+    agentApproval: { type: Boolean, default: undefined },
   },
   { timestamps: true }
 );
 
+userSchema.pre("save", function (next) {
+  if (this.role !== Role.AGENT) {
+    this.agentApproval = undefined;
+  } else {
+    this.agentApproval = true; //agent approval true by default
+  }
+  next();
+});
+
 userSchema.post("save", async (doc) => {
   if (doc) {
-    const isWalletExist = await Wallet.findById(doc._id);
-    if (!isWalletExist) {
-      await Wallet.create({ owner: doc._id });
+    if (doc.role === Role.USER || doc.role === Role.AGENT) {
+      const isWalletExist = await Wallet.findById(doc._id);
+      if (!isWalletExist) {
+        await Wallet.create({ owner: doc._id });
+      }
     }
   }
 });

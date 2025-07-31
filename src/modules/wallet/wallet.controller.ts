@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import AppError from "../../helpers/AppError";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { walletServices } from "./wallet.Services";
@@ -57,10 +58,17 @@ const sendMoney = catchAsync(
     const decodedToken = req.user;
 
     const payload = {
-      sender: decodedToken.userId,
+      sender: decodedToken.phone,
       receiver: req.body.receiver,
       amount: req.body.amount,
     };
+
+    if (payload.sender === payload.receiver) {
+      throw new AppError(
+        StatusCodes.FORBIDDEN,
+        "Sender and Receiver can be same. Choose a valid receiver."
+      );
+    }
     const wallet = await walletServices.sendMoney(payload);
 
     sendResponse(res, {
@@ -74,9 +82,9 @@ const sendMoney = catchAsync(
 const cashIn = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const decodedToken = req.user;
-    
+
     const payload = {
-      sender: decodedToken.userId,
+      sender: decodedToken.phone,
       receiver: req.body.receiver,
       amount: req.body.amount,
     };
@@ -90,6 +98,89 @@ const cashIn = catchAsync(
     });
   }
 );
+const cashOut = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user;
+
+    const payload = {
+      sender: req.body.sender,
+      receiver: decodedToken.phone,
+      amount: req.body.amount,
+    };
+    const transactionInfo = await walletServices.cashOut(payload);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: "Cash-out successfully",
+      data: transactionInfo,
+    });
+  }
+);
+
+const getAllWallets = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user;
+    const query = req.query;
+
+    const result = await walletServices.getAllWallets(
+      query as Record<string, string>
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: "Retrieved All wallets successfully",
+      meta: result.meta,
+      data: result.data,
+    });
+  }
+);
+
+const getSingleWallet = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const walletId = req.params.id;
+
+    const wallet = await walletServices.getSingleWallet(walletId);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: "Wallet retrieved successfully",
+      data: wallet,
+    });
+  }
+);
+
+const blockWallet = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const walletId = req.params.id;
+
+    const updatedWallet = await walletServices.blockWallet(walletId);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: "Wallet blocked successfully",
+      data: updatedWallet,
+    });
+  }
+);
+
+const unblockWallet = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const walletId = req.params.id;
+
+    const updatedWallet = await walletServices.unblockWallet(walletId);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: "Wallet unblocked successfully",
+      data: updatedWallet,
+    });
+  }
+);
 
 export const walletControllers = {
   myWallet,
@@ -97,4 +188,9 @@ export const walletControllers = {
   withdrawMoney,
   sendMoney,
   cashIn,
+  cashOut,
+  getAllWallets,
+  getSingleWallet,
+  blockWallet,
+  unblockWallet,
 };

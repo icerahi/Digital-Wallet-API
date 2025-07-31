@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../config/env";
 import AppError from "../helpers/AppError";
+import { Role } from "../modules/user/user.interface";
 import { Wallet } from "../modules/wallet/wallet.model";
 import { verifyToken } from "../utils/jwt";
 
@@ -23,14 +24,20 @@ export const checkAuth =
         throw new AppError(403, "You are not authorize to access this route");
       }
 
-      const isWalletExist = await Wallet.findOne({
-        owner: verifiedToken.userId,
-      });
-      if (!isWalletExist)
-        throw new AppError(StatusCodes.NOT_FOUND, "User Wallet doesn't exist");
+      if (
+        verifiedToken.role === Role.USER ||
+        verifiedToken.role === Role.AGENT
+      ) {
+        const isWalletExist = await Wallet.findOne({
+          owner: verifiedToken.userId,
+        });
 
-      if (isWalletExist.isBlocked) {
-        throw new AppError(StatusCodes.BAD_REQUEST, "User Wallet is Blocked");
+        if (!isWalletExist)
+          throw new AppError(StatusCodes.NOT_FOUND, "Wallet doesn't exist");
+
+        if (isWalletExist.isBlocked) {
+          throw new AppError(StatusCodes.BAD_REQUEST, "User Wallet is Blocked");
+        }
       }
 
       req.user = verifiedToken;

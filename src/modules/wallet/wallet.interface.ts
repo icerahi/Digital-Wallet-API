@@ -10,6 +10,23 @@ export interface IWallet {
 export interface IWalletStaticMethods extends Model<IWallet> {
   addMoney(userId: string, amount: number): Promise<IWallet>;
   withdrawMoney(userId: string, amount: number): Promise<IWallet>;
-  sendMoney(payload: Partial<ITransaction>): Promise<IWallet>;
-  cashIn(payload: Partial<ITransaction>): Promise<ITransaction>;
+  sendMoney(
+    sender: Types.ObjectId,
+    receiver: Types.ObjectId,
+    amount: number
+  ): Promise<IWallet>;
+  cashIn(
+    sender: Types.ObjectId,
+    receiver: Types.ObjectId,
+    amount: number
+  ): Promise<ITransaction>;
+  cashOut(
+    sender: Types.ObjectId,
+    receiver: Types.ObjectId,
+    amount: number
+  ): Promise<ITransaction>;
+}
+
+export interface IWalletFilter {
+  isBlocked?: boolean;
 }

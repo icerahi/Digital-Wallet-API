@@ -18,4 +18,70 @@ const register = catchAsync(
   }
 );
 
-export const userControllers = { register };
+const getAllUsers = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // const role = req.query.role || "";
+    // const phone = req.query.phone || "";
+    const query = req.query;
+
+    const result = await userServices.getAllUsers(
+      query as Record<string, string>
+    );
+
+    sendResponse(res, {
+      statusCode: StatusCodes.CREATED,
+      success: true,
+      message: "Users retrieved successfully",
+      data: result.data,
+      meta: result.meta,
+    });
+  }
+);
+const getSingleUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id;
+    const user = await userServices.getSingleUser(userId);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.CREATED,
+      success: true,
+      message: "User retrieved successfully",
+      data: user,
+    });
+  }
+);
+const approveAgent = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id;
+    const result = await userServices.approveAgent(userId);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.CREATED,
+      success: true,
+      message: "Agent approved successfully",
+      data: result,
+    });
+  }
+);
+
+const suspendAgent = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id;
+    const result = await userServices.suspendAgent(userId);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.CREATED,
+      success: true,
+      message: "Suspend as an agent successfully",
+      data: result,
+    });
+  }
+);
+
+export const userControllers = {
+  register,
+  getAllUsers,
+  getSingleUser,
+  approveAgent,
+  suspendAgent,
+};

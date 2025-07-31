@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { AuthRoutes } from "../modules/auth/auth.route";
+import { TransactionsRoutes } from "../modules/transaction/transaction.route";
 import { UserRoutes } from "../modules/user/user.route";
 import { WalletRoutes } from "../modules/wallet/wallet.route";
-import { TransactionsRoutes } from "../modules/transaction/transaction.route";
 
 export const router = Router();
 
