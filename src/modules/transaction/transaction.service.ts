@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import mongoose from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 import AppError from "../../helpers/AppError";
 import { ITransaction } from "./transaction.interface";
 import { Transaction } from "./transaction.model";
@@ -8,15 +8,23 @@ const myTransactions = async (
   userId: string,
   query: Record<string, string>
 ) => {
-  const filter = query;
   const currentUserId = new mongoose.Types.ObjectId(userId);
-  const transactions = await Transaction.find({
+
+  const filter: any = {
     $or: [{ sender: currentUserId }, { receiver: currentUserId }],
-  });
+  };
+  if (query.type) filter.type = query.type;
 
-  console.log(transactions);
+  const transactions = await Transaction.find(filter);
 
-  const total = transactions.length;
+  for (const tx of transactions) {
+    if (isValidObjectId(tx.sender))
+      await tx.populate("sender", "fullname phone role");
+    if (isValidObjectId(tx.receiver))
+      await tx.populate("receiver", "fullname phone role");
+  }
+
+  const total = await Transaction.countDocuments(filter);
 
   return {
     data: transactions,
@@ -30,7 +38,7 @@ const getAllTransactions = async (query: Record<string, string>) => {
   const filter = query;
 
   const result = await Transaction.find(filter);
-  const total = result.length;
+  const total = await Transaction.countDocuments(filter);
 
   return {
     data: result,

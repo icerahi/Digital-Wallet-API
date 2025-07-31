@@ -13,7 +13,10 @@ export const transactionSchema = new Schema<ITransaction>(
       required: true,
     },
     amount: { type: Number, min: 1, required: true },
-    sender: { type: Schema.Types.Mixed, ref: "User" },
+    sender: {
+      type: Schema.Types.Mixed,
+      ref: "User",
+    },
     receiver: { type: Schema.Types.Mixed, ref: "User" },
     status: {
       type: String,
