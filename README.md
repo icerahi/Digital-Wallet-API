@@ -1,34 +1,37 @@
 # Digital Wallet API
 
-This is a secure, modular, and role-based backend API for a digital wallet system, similar to Bkash or Nagad. It is built with Express.js and Mongoose.
+Welcome to the Digital Wallet API, a secure and modular backend system built with Express.js and Mongoose. This API empowers you to build a robust digital wallet application, similar to popular services like Bkash or Nagad, with features for users, agents, and administrators.
 
 ## Project Overview
 
-This project implements a digital wallet system where users can register, manage wallets, and perform core financial operations such as adding money, withdrawing, and sending money. The system includes authentication, role-based authorization, wallet management logic, and transactional logic, all within a modular code architecture.
+This project provides a comprehensive and well-structured foundation for a digital wallet system. It includes a secure authentication system, role-based access control, and a complete set of features for managing wallets and processing transactions. The modular architecture makes it easy to understand, maintain, and extend.
 
 ## Features
 
-*   **User Authentication:** Secure user registration and login with JWT (JSON Web Token) authentication. Passwords are hashed using bcrypt. The system supports three distinct roles: `user`, `agent`, and `admin`.
+### Core Features
 
-*   **Wallet Management:** Every `user` and `agent` is automatically provided with a digital wallet upon registration, initialized with a balance of ৳50. Wallets can be blocked or unblocked by administrators, preventing any transactions on a blocked wallet.
+*   **Secure Authentication:** A robust authentication system using JSON Web Tokens (JWT) and bcrypt for password hashing. The system supports three user roles: `user`, `agent`, and `admin`.
+*   **Role-Based Access Control (RBAC):** A flexible RBAC system that restricts access to specific endpoints based on user roles, ensuring that users can only perform actions they are authorized to.
+*   **Automatic Wallet Creation:** Every `user` and `agent` automatically receives a digital wallet with an initial balance of ৳50 upon registration.
+*   **Comprehensive Transaction System:** A complete system for tracking all financial operations, including adding money, withdrawing money, sending money, cash-ins, and cash-outs.
 
-*   **User Capabilities:**
-    *   **Add Money (Top-Up):** Users can add funds to their own wallets.
-    *   **Withdraw Money:** Users can withdraw funds from their own wallets.
-    *   **Send Money:** Users can transfer funds to other users.
-    *   **Transaction History:** Users can view a complete history of their transactions.
+### User Features
 
-*   **Agent Capabilities:**
-    *   **Cash-In:** Agents can add funds to any user's wallet.
-    *   **Cash-Out:** Agents can withdraw funds from any user's wallet.
+*   **Add Money:** Users can easily top-up their wallets.
+*   **Withdraw Money:** Users can withdraw funds from their wallets.
+*   **Send Money:** Users can send money to other users by specifying the recipient's phone number.
+*   **Transaction History:** Users have access to a detailed history of all their transactions, with support for filtering by transaction type, sorting, and pagination.
 
-*   **Administrator Capabilities:**
-    *   **System-Wide Visibility:** Admins have a comprehensive view of all users, agents, wallets, and transactions within the system.
-    *   **User and Wallet Control:** Admins can block or unblock user wallets and approve or suspend agent accounts.
+### Agent Features
 
-*   **Transaction Integrity:** All financial operations are recorded as transactions, ensuring a complete and auditable trail of activities.
+*   **Cash-In:** Agents can add money to a user's wallet by specifying the user's phone number.
+*   **Cash-Out:** Agents can withdraw money from a user's wallet by specifying the user's phone number.
 
-*   **Role-Based Access Control (RBAC):** The API enforces strict access control, ensuring that users, agents, and admins can only access the features and data relevant to their roles.
+### Admin Features
+
+*   **Complete System Oversight:** Administrators have a bird's-eye view of the entire system, with access to all users, agents, wallets, and transactions.
+*   **User and Wallet Management:** Admins can block or unblock user wallets, and approve or suspend agent accounts.
+*   **Advanced Filtering and Sorting:** Admins can filter and sort users, wallets, and transactions based on various criteria.
 
 ## API Endpoints
 
@@ -68,13 +71,21 @@ This project implements a digital wallet system where users can register, manage
       "fullname": "John Doe",
       "phone": "01700000000",
       "password": "Password@123",
-      "role": "user" 
+      "role": "user"
     }
     ```
 
 *   **`GET /api/v1/users/all-users`**
 
     Retrieves a list of all users. (Admin only)
+
+    **Query Parameters:**
+
+    *   `role`: Filter by user role (`user` or `agent`).
+    *   `phone`: Filter by phone number.
+    *   `sort`: Sort by a specific field (e.g., `createdAt`, `-createdAt`).
+    *   `page`: The page number for pagination.
+    *   `limit`: The number of items per page.
 
 *   **`GET /api/v1/users/:id`**
 
@@ -126,7 +137,7 @@ This project implements a digital wallet system where users can register, manage
 
     ```json
     {
-      "receiver": "<receiver-user-id>",
+      "receiver": "<receiver-phone-number>",
       "amount": 50
     }
     ```
@@ -139,7 +150,7 @@ This project implements a digital wallet system where users can register, manage
 
     ```json
     {
-      "receiver": "<user-id>",
+      "receiver": "<user-phone-number>",
       "amount": 100
     }
     ```
@@ -152,7 +163,7 @@ This project implements a digital wallet system where users can register, manage
 
     ```json
     {
-      "sender": "<user-id>",
+      "sender": "<user-phone-number>",
       "amount": 50
     }
     ```
@@ -160,6 +171,13 @@ This project implements a digital wallet system where users can register, manage
 *   **`GET /api/v1/wallets/all-wallets`**
 
     Retrieves all wallets in the system. (Admin only)
+
+    **Query Parameters:**
+
+    *   `phone`: Filter by the owner's phone number.
+    *   `sort`: Sort by a specific field (e.g., `createdAt`, `-createdAt`).
+    *   `page`: The page number for pagination.
+    *   `limit`: The number of items per page.
 
 *   **`PATCH /api/v1/wallets/block/:id`**
 
@@ -179,9 +197,25 @@ This project implements a digital wallet system where users can register, manage
 
     Retrieves the transaction history of the currently authenticated `user` or `agent`.
 
+    **Query Parameters:**
+
+    *   `type`: Filter by transaction type (e.g., `ADD_MONEY`, `SEND_MONEY`).
+    *   `sort`: Sort by a specific field (e.g., `createdAt`, `-createdAt`).
+    *   `page`: The page number for pagination.
+    *   `limit`: The number of items per page.
+
 *   **`GET /api/v1/transactions/all`**
 
     Retrieves all transactions in the system. (Admin only)
+
+    **Query Parameters:**
+
+    *   `type`: Filter by transaction type.
+    *   `sender`: Filter by the sender's phone number.
+    *   `receiver`: Filter by the receiver's phone number.
+    *   `sort`: Sort by a specific field.
+    *   `page`: The page number for pagination.
+    *   `limit`: The number of items per page.
 
 *   **`GET /api/v1/transactions/:id`**
 
@@ -198,6 +232,64 @@ This project implements a digital wallet system where users can register, manage
       "status": "completed"
     }
     ```
+
+## Project Structure
+
+The project follows a modular architecture to ensure a clean and scalable codebase:
+
+```
+src/
+├── app.ts                # Express app configuration
+├── server.ts             # Server initialization
+├── config/               # Environment variables and configuration
+│   └── env.ts
+├── helpers/              # Custom error handling and utility functions
+│   └── AppError.ts
+├── interfaces/           # TypeScript interfaces and type definitions
+│   ├── error.types.ts
+│   └── index.d.ts
+├── middlewares/          # Express middleware for authentication, validation, etc.
+│   ├── checkAuth.ts
+│   ├── globalErrorHandler.ts
+│   ├── notFound.ts
+│   └── validateRequest.ts
+├── modules/              # Core application modules
+│   ├── auth/             # Authentication and authorization
+│   │   ├── auth.controller.ts
+│   │   ├── auth.route.ts
+│   │   ├── auth.service.ts
+│   │   └── auth.validation.ts
+│   ├── transaction/      # Transaction management
+│   │   ├── transaction.controller.ts
+│   │   ├── transaction.interface.ts
+│   │   ├── transaction.model.ts
+│   │   ├── transaction.route.ts
+│   │   ├── transaction.service.ts
+│   │   └── transaction.validation.ts
+│   ├── user/             # User management
+│   │   ├── user.controller.ts
+│   │   ├── user.interface.ts
+│   │   ├── user.model.ts
+│   │   ├── user.route.ts
+│   │   ├── user.service.ts
+│   │   └── user.validation.ts
+│   └── wallet/           # Wallet management
+│       ├── wallet.controller.ts
+│       ├── wallet.interface.ts
+│       ├── wallet.model.ts
+│       ├── wallet.route.ts
+│       ├── wallet.Services.ts
+│       └── wallet.validation.ts
+├── routes/               # API routes
+│   └── index.ts
+└── utils/                # Utility functions
+    ├── catchAsync.ts
+    ├── createUserToken.ts
+    ├── jwt.ts
+    ├── seedSuperAdmin.ts
+    ├── sendResponse.ts
+    └── setCookie.ts
+```
 
 ## Installation and Setup
 
@@ -235,29 +327,15 @@ This project implements a digital wallet system where users can register, manage
 ## Environment Variables
 
 *   `PORT`: The port to run the server on.
-*   `MONGO_URI`: The connection string for the MongoDB database.
-*   `JWT_SECRET`: Secret key for signing JWTs.
-*   `JWT_EXPIRES_IN`: Expiration time for JWTs.
-*   `REFRESH_TOKEN_SECRET`: Secret key for signing refresh tokens.
-*   `REFRESH_TOKEN_EXPIRES_IN`: Expiration time for refresh tokens.
-*   `BCRYPT_SALT_ROUNDS`: The number of salt rounds for bcrypt.
-*   `SUPER_ADMIN_EMAIL`: The email for the super admin user.
+*   `DB_URL`: The connection string for the MongoDB database.
+*   `NODE_ENV`: The application environment (`development` or `production`).
+*   `BCRYPT_SALT_ROUND`: The number of salt rounds for bcrypt.
+*   `JWT_ACCESS_TOKEN_SECRET`: Secret key for signing JWTs.
+*   `JWT_ACCESS_TOKEN_EXPIRES`: Expiration time for JWTs.
+*   `JWT_REFRESH_TOKEN_SECRET`: Secret key for signing refresh tokens.
+*   `JWT_REFRESH_TOKEN_EXPIRES`: Expiration time for refresh tokens.
+*   `SUPER_ADMIN_PHONE`: The phone number for the super admin user.
 *   `SUPER_ADMIN_PASSWORD`: The password for the super admin user.
-
-## Project Structure
-
-```
-src/
-├── modules/
-│   ├── auth/
-│   ├── user/
-│   ├── wallet/
-│   └── transaction/
-├── middlewares/
-├── config/
-├── utils/
-├── app.ts
-```
 
 ## Technologies Used
 
