@@ -50,7 +50,7 @@ router.post(
 
 //only Admin Access
 router.get(
-  "/all-wallets",
+  "/all",
   checkAuth(Role.ADMIN),
   walletControllers.getAllWallets
 );

@@ -7,9 +7,9 @@ import { WalletRoutes } from "../modules/wallet/wallet.route";
 export const router = Router();
 
 const moduleRoutes = [
-  { path: "/user", route: UserRoutes },
+  { path: "/users", route: UserRoutes },
   { path: "/auth", route: AuthRoutes },
-  { path: "/wallet", route: WalletRoutes },
+  { path: "/wallets", route: WalletRoutes },
   { path: "/transactions", route: TransactionsRoutes },
 ];
 
