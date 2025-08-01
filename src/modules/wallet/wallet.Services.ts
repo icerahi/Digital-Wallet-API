@@ -42,7 +42,7 @@ const sendMoney = async (payload: Partial<ITransaction>) => {
   const updatedWallet = await Wallet.sendMoney(
     sender._id,
     receiver._id,
-    payload.amount!
+    payload.amount as number
   );
   return updatedWallet;
 };
@@ -64,7 +64,7 @@ const cashIn = async (payload: Partial<ITransaction>) => {
   const transactionInfo = await Wallet.cashIn(
     sender._id,
     receiver._id,
-    payload.amount!
+    payload.amount as number
   );
   return transactionInfo;
 };
@@ -86,24 +86,41 @@ const cashOut = async (payload: Partial<ITransaction>) => {
   const transactionInfo = await Wallet.cashOut(
     sender._id,
     receiver._id,
-    payload.amount!
+    payload.amount as number
   );
   return transactionInfo;
 };
 
 const getAllWallets = async (query: Record<string, string>) => {
-  const filter = query;
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  const filter: any = {};
+  const sort = query.sort || "-createdAt";
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * Number(limit);
 
-  const wallets = await Wallet.find(filter).populate(
-    "owner",
-    "fullname phone role"
-  );
+  if (query.phone) {
+    const user = await User.findOne({ phone: query.phone }, "_id");
+    if (!user)
+      throw new AppError(
+        StatusCodes.NOT_FOUND,
+        "Number doesn't associate with any user wallet"
+      );
+    filter.owner = user._id;
+  }
 
-  const total = wallets.length;
+  const wallets = await Wallet.find(filter)
+    .sort(sort)
+    .skip(skip)
+    .limit(limit)
+    .populate("owner", "fullname phone role");
+
+  const total = await Wallet.countDocuments(filter);
+  const totalPages = Math.ceil(total / limit);
 
   return {
     data: wallets,
-    meta: { total },
+    meta: { total, limit, page, totalPages },
   };
 };
 

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
+
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppError from "../../helpers/AppError";

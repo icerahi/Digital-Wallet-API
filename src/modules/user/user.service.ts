@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import bcrypt from "bcryptjs";
 import { StatusCodes } from "http-status-codes";
 import { envVars } from "../../config/env";
@@ -24,11 +26,16 @@ const register = async (payload: IUser) => {
 
 const getAllUsers = async (query: Record<string, string>) => {
   const filter = query;
+  const sort = query.sort || "-createdAt";
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * Number(limit);
 
-  const users = await User.find(filter);
+  const users = await User.find(filter).sort(sort).skip(skip).limit(limit);
 
-  const total = users.length;
-  return { data: users, meta: { total } };
+  const total = await User.countDocuments(filter);
+  const totalPages = Math.ceil(total / limit);
+  return { data: users, meta: { total, limit, page, totalPages } };
 };
 
 const getSingleUser = async (userId: string) => {

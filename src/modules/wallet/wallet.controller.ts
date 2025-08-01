@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppError from "../../helpers/AppError";
@@ -120,7 +122,6 @@ const cashOut = catchAsync(
 
 const getAllWallets = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const decodedToken = req.user;
     const query = req.query;
 
     const result = await walletServices.getAllWallets(

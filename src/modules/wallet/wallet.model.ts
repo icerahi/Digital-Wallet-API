@@ -8,11 +8,14 @@ import {
 import { Transaction } from "../transaction/transaction.model";
 import { IWallet, IWalletStaticMethods } from "./wallet.interface";
 
-const walletSchema = new Schema<IWallet, IWalletStaticMethods>({
-  balance: { type: Number, min: 0, default: 50 },
-  isBlocked: { type: Boolean, default: false },
-  owner: { type: Schema.Types.ObjectId, ref: "User" },
-});
+const walletSchema = new Schema<IWallet, IWalletStaticMethods>(
+  {
+    balance: { type: Number, min: 0, default: 50 },
+    isBlocked: { type: Boolean, default: false },
+    owner: { type: Schema.Types.ObjectId, ref: "User" },
+  },
+  { timestamps: true }
+);
 
 //add money
 walletSchema.statics.addMoney = async function (userId, amount) {

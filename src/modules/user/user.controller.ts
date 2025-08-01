@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { catchAsync } from "../../utils/catchAsync";
@@ -20,8 +22,6 @@ const register = catchAsync(
 
 const getAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    // const role = req.query.role || "";
-    // const phone = req.query.phone || "";
     const query = req.query;
 
     const result = await userServices.getAllUsers(
