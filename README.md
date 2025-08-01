@@ -19,7 +19,7 @@ This project provides a comprehensive and well-structured foundation for a digit
 
 - **Add Money:**: Add funds to personal wallet (extensible, e.g., from `Bank`, `Credit Card` etc).
 - **Withdraw Money**: Transfer funds from wallet to external accounts (extensible e.g., to `ATM` or `Wallat to Bank` )
-- \*\*Send Money: Send money to other users via phone number
+- **Send Money**: Send money to other users via phone number
 - **Transaction History**: Detailed financial records with filtering and pagination
 
 ### Agent Services
