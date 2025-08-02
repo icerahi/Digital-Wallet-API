@@ -29,7 +29,7 @@ const getAllUsers = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(v
     const query = req.query;
     const result = yield user_service_1.userServices.getAllUsers(query);
     (0, sendResponse_1.sendResponse)(res, {
-        statusCode: http_status_codes_1.StatusCodes.CREATED,
+        statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
         message: "Users retrieved successfully",
         data: result.data,
@@ -40,7 +40,7 @@ const getSingleUser = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter
     const userId = req.params.id;
     const user = yield user_service_1.userServices.getSingleUser(userId);
     (0, sendResponse_1.sendResponse)(res, {
-        statusCode: http_status_codes_1.StatusCodes.CREATED,
+        statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
         message: "User retrieved successfully",
         data: user,
@@ -50,7 +50,7 @@ const approveAgent = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(
     const userId = req.params.id;
     const result = yield user_service_1.userServices.approveAgent(userId);
     (0, sendResponse_1.sendResponse)(res, {
-        statusCode: http_status_codes_1.StatusCodes.CREATED,
+        statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
         message: "Agent approved successfully",
         data: result,
@@ -60,7 +60,7 @@ const suspendAgent = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(
     const userId = req.params.id;
     const result = yield user_service_1.userServices.suspendAgent(userId);
     (0, sendResponse_1.sendResponse)(res, {
-        statusCode: http_status_codes_1.StatusCodes.CREATED,
+        statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
         message: "Suspend as an agent successfully",
         data: result,

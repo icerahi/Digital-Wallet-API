@@ -29,7 +29,7 @@ const getAllUsers = catchAsync(
     );
 
     sendResponse(res, {
-      statusCode: StatusCodes.CREATED,
+      statusCode: StatusCodes.OK,
       success: true,
       message: "Users retrieved successfully",
       data: result.data,
@@ -43,7 +43,7 @@ const getSingleUser = catchAsync(
     const user = await userServices.getSingleUser(userId);
 
     sendResponse(res, {
-      statusCode: StatusCodes.CREATED,
+      statusCode: StatusCodes.OK,
       success: true,
       message: "User retrieved successfully",
       data: user,
@@ -56,7 +56,7 @@ const approveAgent = catchAsync(
     const result = await userServices.approveAgent(userId);
 
     sendResponse(res, {
-      statusCode: StatusCodes.CREATED,
+      statusCode: StatusCodes.OK,
       success: true,
       message: "Agent approved successfully",
       data: result,
@@ -70,7 +70,7 @@ const suspendAgent = catchAsync(
     const result = await userServices.suspendAgent(userId);
 
     sendResponse(res, {
-      statusCode: StatusCodes.CREATED,
+      statusCode: StatusCodes.OK,
       success: true,
       message: "Suspend as an agent successfully",
       data: result,
