@@ -92,12 +92,14 @@ const cashOut = async (payload: Partial<ITransaction>) => {
 };
 
 const getAllWallets = async (query: Record<string, string>) => {
-    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const filter: any = {};
   const sort = query.sort || "-createdAt";
   const page = Number(query.page) || 1;
   const limit = Number(query.limit) || 10;
   const skip = (page - 1) * Number(limit);
+
+  if (query.isBlocked) filter.isBlocked = Boolean(query.isBlocked);
 
   if (query.phone) {
     const user = await User.findOne({ phone: query.phone }, "_id");

@@ -1,0 +1,769 @@
+{
+	"info": {
+		"_postman_id": "ebb6d5f0-aa68-41a2-9d21-2c2e62acf0f6",
+		"name": "Digital Wallet API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47184650",
+		"_collection_link": "https://orbital-module-administrator-21672743-474184.postman.co/workspace/MD-IMRAN-HASAN-(RAHI)'s-Workspa~df96aff3-6628-4333-85b7-bd1a6097bf5b/collection/47184650-ebb6d5f0-aa68-41a2-9d21-2c2e62acf0f6?action=share&source=collection_link&creator=47184650"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone\":\"01912345678\",\n    \"password\":\"@Imran#420\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/auth/login",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refreshToken",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/auth/refresh-token",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/auth/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullname\":\"Agent Khan\",\n    \"phone\":\"01312345678\",\n    \"password\":\"@Imran#420\"\n  \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/users/register",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Users[Admin]",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2I0ZjE5MzJhZjUyNjc3MmM4ZTUiLCJwaG9uZSI6IjAxOTEyMzQ1Njc4Iiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzU0MTI0MzE2LCJleHAiOjE3NTQyMTA3MTZ9.SRDUeLv0ET7GfIPsHylckWhPlkjUHNwIBJrIRG2LJeI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/users/all-users",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"all-users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single User [Admin]",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2I0ZjE5MzJhZjUyNjc3MmM4ZTUiLCJwaG9uZSI6IjAxOTEyMzQ1Njc4Iiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzU0MTI0MzE2LCJleHAiOjE3NTQyMTA3MTZ9.SRDUeLv0ET7GfIPsHylckWhPlkjUHNwIBJrIRG2LJeI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/users/688dcad81932af526772c8d3",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"688dcad81932af526772c8d3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Suspend as As Agent [Admin]",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2I0ZjE5MzJhZjUyNjc3MmM4ZTUiLCJwaG9uZSI6IjAxOTEyMzQ1Njc4Iiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzU0MTI0MzE2LCJleHAiOjE3NTQyMTA3MTZ9.SRDUeLv0ET7GfIPsHylckWhPlkjUHNwIBJrIRG2LJeI",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/users/suspend-agent/688dcb1f1932af526772c8df",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"suspend-agent",
+								"688dcb1f1932af526772c8df"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve As Agent [Admin]",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2I0ZjE5MzJhZjUyNjc3MmM4ZTUiLCJwaG9uZSI6IjAxOTEyMzQ1Njc4Iiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzU0MTI0MzE2LCJleHAiOjE3NTQyMTA3MTZ9.SRDUeLv0ET7GfIPsHylckWhPlkjUHNwIBJrIRG2LJeI",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullname\":\"AGENT KHAN\",\n    \"phone\":\"01712345678\",\n    \"password\":\"@Imran#420\",\n    \"role\":\"AGENT\"\n}"
+						},
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/users/approve-agent/688dcb1f1932af526772c8df",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"approve-agent",
+								"688dcb1f1932af526772c8df"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Wallet",
+			"item": [
+				{
+					"name": "My Wallet [User/Agent]",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2FiMTE5MzJhZjUyNjc3MmM4Y2IiLCJwaG9uZSI6IjAxNzEyMzQ1Njc4Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTQxMjM4ODEsImV4cCI6MTc1NDIxMDI4MX0.xj6MQgHO811zqIqxJVKtQJ83HdFxmnD4XH3vlP1ukOA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"amount\":1}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/wallets/me",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Money [User/Agent]",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2FiMTE5MzJhZjUyNjc3MmM4Y2IiLCJwaG9uZSI6IjAxNzEyMzQ1Njc4Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTQxMjM4ODEsImV4cCI6MTc1NDIxMDI4MX0.xj6MQgHO811zqIqxJVKtQJ83HdFxmnD4XH3vlP1ukOA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"amount\":20}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/wallets/add-money",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"add-money"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Withdraw Money [User]",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2FiMTE5MzJhZjUyNjc3MmM4Y2IiLCJwaG9uZSI6IjAxNzEyMzQ1Njc4Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTQxMjM4ODEsImV4cCI6MTc1NDIxMDI4MX0.xj6MQgHO811zqIqxJVKtQJ83HdFxmnD4XH3vlP1ukOA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"amount\":30}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/wallets/withdraw-money",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"withdraw-money"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Money [User]",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2FiMTE5MzJhZjUyNjc3MmM4Y2IiLCJwaG9uZSI6IjAxNzEyMzQ1Njc4Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTQxMjM4ODEsImV4cCI6MTc1NDIxMDI4MX0.xj6MQgHO811zqIqxJVKtQJ83HdFxmnD4XH3vlP1ukOA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\":5,\n    \"receiver\":\"01812345678\"\n} ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/wallets/send-money",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"send-money"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cash-In [Agent]",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2IxMjE5MzJhZjUyNjc3MmM4ZDkiLCJwaG9uZSI6IjAxNTEyMzQ1Njc4Iiwicm9sZSI6IkFHRU5UIiwiaWF0IjoxNzU0MTI0MTM0LCJleHAiOjE3NTQyMTA1MzR9.4cdCUwg9JPLl5HhNinCIWIAOlzW4EO81sbjVsLP6JxI",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"receiver\":\"01812345678\",\n    \"amount\":10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/wallets/cash-in",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"cash-in"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cash-Out [Agent]",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2IxMjE5MzJhZjUyNjc3MmM4ZDkiLCJwaG9uZSI6IjAxNTEyMzQ1Njc4Iiwicm9sZSI6IkFHRU5UIiwiaWF0IjoxNzU0MTI0MTM0LCJleHAiOjE3NTQyMTA1MzR9.4cdCUwg9JPLl5HhNinCIWIAOlzW4EO81sbjVsLP6JxI",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sender\":\"01812345678\",\n    \"amount\":10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/wallets/cash-out",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"cash-out"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Wallets [Admin]",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2I0ZjE5MzJhZjUyNjc3MmM4ZTUiLCJwaG9uZSI6IjAxOTEyMzQ1Njc4Iiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzU0MTI0MzE2LCJleHAiOjE3NTQyMTA3MTZ9.SRDUeLv0ET7GfIPsHylckWhPlkjUHNwIBJrIRG2LJeI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/wallets/all",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Wallet [Admin]",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2I0ZjE5MzJhZjUyNjc3MmM4ZTUiLCJwaG9uZSI6IjAxOTEyMzQ1Njc4Iiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzU0MTI0MzE2LCJleHAiOjE3NTQyMTA3MTZ9.SRDUeLv0ET7GfIPsHylckWhPlkjUHNwIBJrIRG2LJeI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/wallets/688dcad91932af526772c8d6",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"688dcad91932af526772c8d6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Block Wallet [Admin]",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2I0ZjE5MzJhZjUyNjc3MmM4ZTUiLCJwaG9uZSI6IjAxOTEyMzQ1Njc4Iiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzU0MTI0MzE2LCJleHAiOjE3NTQyMTA3MTZ9.SRDUeLv0ET7GfIPsHylckWhPlkjUHNwIBJrIRG2LJeI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/wallets/block/688dcad91932af526772c8d6",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"block",
+								"688dcad91932af526772c8d6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unblock Wallet [Admin]",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2I0ZjE5MzJhZjUyNjc3MmM4ZTUiLCJwaG9uZSI6IjAxOTEyMzQ1Njc4Iiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzU0MTI0MzE2LCJleHAiOjE3NTQyMTA3MTZ9.SRDUeLv0ET7GfIPsHylckWhPlkjUHNwIBJrIRG2LJeI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/wallets/unblock/688dcad91932af526772c8d6",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"unblock",
+								"688dcad91932af526772c8d6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "transactions",
+			"item": [
+				{
+					"name": "My Transactions[User/Agent]",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2IxMjE5MzJhZjUyNjc3MmM4ZDkiLCJwaG9uZSI6IjAxNTEyMzQ1Njc4Iiwicm9sZSI6IkFHRU5UIiwiaWF0IjoxNzU0MTI0MTM0LCJleHAiOjE3NTQyMTA1MzR9.4cdCUwg9JPLl5HhNinCIWIAOlzW4EO81sbjVsLP6JxI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/transactions/me?type=CASH_OUT",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"me"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "CASH_OUT"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Transactions [Admin]",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2I0ZjE5MzJhZjUyNjc3MmM4ZTUiLCJwaG9uZSI6IjAxOTEyMzQ1Njc4Iiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzU0MTI0MzE2LCJleHAiOjE3NTQyMTA3MTZ9.SRDUeLv0ET7GfIPsHylckWhPlkjUHNwIBJrIRG2LJeI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/transactions/all?phone=01712345678",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"all"
+							],
+							"query": [
+								{
+									"key": "phone",
+									"value": "01712345678"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Transaction [Admin]",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2I0ZjE5MzJhZjUyNjc3MmM4ZTUiLCJwaG9uZSI6IjAxOTEyMzQ1Njc4Iiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzU0MTI0MzE2LCJleHAiOjE3NTQyMTA3MTZ9.SRDUeLv0ET7GfIPsHylckWhPlkjUHNwIBJrIRG2LJeI",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/transactions/688dcfb21490f2aa78cf6cc8",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"688dcfb21490f2aa78cf6cc8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Transaction Status [Admin]",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhkY2I0ZjE5MzJhZjUyNjc3MmM4ZTUiLCJwaG9uZSI6IjAxOTEyMzQ1Njc4Iiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzU0MTI0MzE2LCJleHAiOjE3NTQyMTA3MTZ9.SRDUeLv0ET7GfIPsHylckWhPlkjUHNwIBJrIRG2LJeI",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\":\"COMPLETED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://ice-wallet.vercel.app/api/v1/transactions/688dcfb21490f2aa78cf6cc8",
+							"protocol": "https",
+							"host": [
+								"ice-wallet",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"688dcfb21490f2aa78cf6cc8"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

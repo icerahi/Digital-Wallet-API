@@ -79,6 +79,8 @@ const getAllWallets = (query) => __awaiter(void 0, void 0, void 0, function* () 
     const page = Number(query.page) || 1;
     const limit = Number(query.limit) || 10;
     const skip = (page - 1) * Number(limit);
+    if (query.isBlocked)
+        filter.isBlocked = Boolean(query.isBlocked);
     if (query.phone) {
         const user = yield user_model_1.User.findOne({ phone: query.phone }, "_id");
         if (!user)
