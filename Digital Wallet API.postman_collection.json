@@ -72,11 +72,12 @@
 						"header": [],
 						"url": {
 							"raw": "https://ice-wallet.vercel.app/api/v1/auth/logout",
-							"protocol": "http",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"ice-wallet",
+								"vercel",
+								"app"
 							],
-							"port": "5000",
 							"path": [
 								"api",
 								"v1",
@@ -99,7 +100,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"fullname\":\"Agent Khan\",\n    \"phone\":\"01312345678\",\n    \"password\":\"@Imran#420\"\n  \n}",
+							"raw": "{\n    \"fullname\":\"User Khan\",\n    \"phone\":\"01422345677\",\n    \"password\":\"@Imran#420\",\n    \"role\": \"AGENT\"\n   \n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -203,7 +204,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://ice-wallet.vercel.app/api/v1/users/suspend-agent/688dcb1f1932af526772c8df",
+							"raw": "https://ice-wallet.vercel.app/api/v1/users/suspend-agent/688e46fc68269ded61a9592e",
 							"protocol": "https",
 							"host": [
 								"ice-wallet",
@@ -215,7 +216,7 @@
 								"v1",
 								"users",
 								"suspend-agent",
-								"688dcb1f1932af526772c8df"
+								"688e46fc68269ded61a9592e"
 							]
 						}
 					},
@@ -237,7 +238,7 @@
 							"raw": "{\n    \"fullname\":\"AGENT KHAN\",\n    \"phone\":\"01712345678\",\n    \"password\":\"@Imran#420\",\n    \"role\":\"AGENT\"\n}"
 						},
 						"url": {
-							"raw": "https://ice-wallet.vercel.app/api/v1/users/approve-agent/688dcb1f1932af526772c8df",
+							"raw": "https://ice-wallet.vercel.app/api/v1/users/approve-agent/688e46fc68269ded61a9592e",
 							"protocol": "https",
 							"host": [
 								"ice-wallet",
@@ -249,7 +250,7 @@
 								"v1",
 								"users",
 								"approve-agent",
-								"688dcb1f1932af526772c8df"
+								"688e46fc68269ded61a9592e"
 							]
 						}
 					},
@@ -466,7 +467,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"sender\":\"01812345678\",\n    \"amount\":10\n}",
+							"raw": "{\n    \"sender\":\"01812345678\",\n    \"amount\":50\n}",
 							"options": {
 								"raw": {
 									"language": "json"

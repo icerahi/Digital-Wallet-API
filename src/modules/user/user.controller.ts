@@ -72,7 +72,7 @@ const suspendAgent = catchAsync(
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
-      message: "Suspend as an agent successfully",
+      message: "Suspended as an agent successfully",
       data: result,
     });
   }

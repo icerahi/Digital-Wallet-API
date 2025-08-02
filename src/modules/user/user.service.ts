@@ -49,43 +49,39 @@ const getSingleUser = async (userId: string) => {
 
 const suspendAgent = async (userId: string) => {
   const user = await User.findById(userId);
-  if (!user) {
-    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
-  }
 
-  if (user.role !== Role.AGENT || !user.agentApproval) {
+  if (!user) throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+
+  if (user.role !== Role.AGENT)
     throw new AppError(
       StatusCodes.BAD_REQUEST,
-      "User must be an approved Agent to be suspended"
+      "User not registered as an Agent"
     );
-  }
-  user.role = Role.USER;
+
+  if (!user.agentApproval)
+    throw new AppError(StatusCodes.BAD_REQUEST, "Agent is already suspended");
+
+  user.agentApproval = false;
 
   await user.save();
 
   return user;
 };
+
 const approveAgent = async (userId: string) => {
   const user = await User.findById(userId);
-  if (!user) {
-    throw new AppError(StatusCodes.NOT_FOUND, "User not found");
-  }
+  if (!user) throw new AppError(StatusCodes.NOT_FOUND, "User not found");
 
-  if (user.agentApproval) {
-    throw new AppError(StatusCodes.BAD_REQUEST, "Agent is already Approved");
-  }
-
-  if (user.role === Role.USER) {
-    user.role = Role.AGENT;
-    user.agentApproval = true;
-  } else if (user.role === Role.AGENT && !user.agentApproval) {
-    user.agentApproval = true;
-  } else {
+  if (user.role !== Role.AGENT)
     throw new AppError(
       StatusCodes.BAD_REQUEST,
-      "Invalid role for agent approval"
+      "User not registered as an Agent"
     );
-  }
+
+  if (user.agentApproval)
+    throw new AppError(StatusCodes.BAD_REQUEST, "Agent is already Approved");
+
+  user.agentApproval = true;
 
   await user.save();
 

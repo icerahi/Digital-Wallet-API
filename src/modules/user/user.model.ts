@@ -14,13 +14,14 @@ const userSchema = new Schema<IUser>(
 );
 
 userSchema.pre("save", function (next) {
-  if (this.role !== Role.AGENT) {
-    this.agentApproval = undefined;
-  } else {
-    this.agentApproval = true; //agent approval true by default
+  if (this.isNew && this.role === Role.AGENT) {
+    this.agentApproval = true;
   }
+
   next();
 });
+
+userSchema;
 
 userSchema.post("save", async (doc) => {
   if (doc) {
