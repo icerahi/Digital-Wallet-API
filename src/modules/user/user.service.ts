@@ -12,7 +12,10 @@ const register = async (payload: IUser) => {
 
   const isUserExist = await User.findOne({ phone });
   if (isUserExist)
-    throw new AppError(StatusCodes.BAD_REQUEST, "User already exist");
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      "User already exist with the Phone Number"
+    );
 
   const hashedPassword = await bcrypt.hash(
     password,
