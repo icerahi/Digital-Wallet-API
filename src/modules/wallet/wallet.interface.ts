@@ -8,8 +8,16 @@ export interface IWallet {
 }
 
 export interface IWalletStaticMethods extends Model<IWallet> {
-  addMoney(userId: string, amount: number): Promise<IWallet>;
-  withdrawMoney(userId: string, amount: number): Promise<IWallet>;
+  addMoney(
+    sender: Types.ObjectId,
+    receiver: Types.ObjectId,
+    amount: number
+  ): Promise<IWallet>;
+  withdrawMoney(
+    sender: Types.ObjectId,
+    receiver: Types.ObjectId,
+    amount: number
+  ): Promise<IWallet>;
   sendMoney(
     sender: Types.ObjectId,
     receiver: Types.ObjectId,

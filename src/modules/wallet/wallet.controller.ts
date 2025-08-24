@@ -25,8 +25,13 @@ const myWallet = catchAsync(
 const addMoney = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const decodedToken = req.user;
-    const { amount } = req.body;
-    const wallet = await walletServices.addMoney(decodedToken.userId, amount);
+
+    const payload = {
+      sender: req.body.sender,
+      receiver: decodedToken.phone,
+      amount: req.body.amount,
+    };
+    const wallet = await walletServices.addMoney(payload);
 
     sendResponse(res, {
       success: true,
@@ -40,11 +45,13 @@ const addMoney = catchAsync(
 const withdrawMoney = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const decodedToken = req.user;
-    const { amount } = req.body;
-    const wallet = await walletServices.withdrawMoney(
-      decodedToken.userId,
-      amount
-    );
+
+    const payload = {
+      sender: decodedToken.phone,
+      receiver: req.body.receiver,
+      amount: req.body.amount,
+    };
+    const wallet = await walletServices.withdrawMoney(payload);
 
     sendResponse(res, {
       success: true,
@@ -90,6 +97,7 @@ const cashIn = catchAsync(
       receiver: req.body.receiver,
       amount: req.body.amount,
     };
+
     const transactionInfo = await walletServices.cashIn(payload);
 
     sendResponse(res, {

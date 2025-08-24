@@ -4,9 +4,8 @@ import { validateRequest } from "../../middlewares/validateRequest";
 import { Role } from "../user/user.interface";
 import { walletControllers } from "./wallet.controller";
 import {
-  addMoneyZodSchema,
-  cashOutZodSchema,
-  sendMoneyAndCashInZodSchema,
+  addMoneyAndCashOutZodSchema,
+  sendWithdrawAndCashInZodSchema,
 } from "./wallet.validation";
 
 const router = Router();
@@ -18,19 +17,19 @@ router.get("/me", checkAuth(Role.USER, Role.AGENT), walletControllers.myWallet);
 router.post(
   "/add-money",
   checkAuth(Role.USER, Role.AGENT),
-  validateRequest(addMoneyZodSchema),
+  validateRequest(addMoneyAndCashOutZodSchema),
   walletControllers.addMoney
 );
 router.post(
   "/withdraw-money",
   checkAuth(Role.USER),
-  validateRequest(addMoneyZodSchema),
+  validateRequest(sendWithdrawAndCashInZodSchema),
   walletControllers.withdrawMoney
 );
 router.post(
   "/send-money",
   checkAuth(Role.USER),
-  validateRequest(sendMoneyAndCashInZodSchema),
+  validateRequest(sendWithdrawAndCashInZodSchema),
   walletControllers.sendMoney
 );
 
@@ -38,22 +37,18 @@ router.post(
 router.post(
   "/cash-in",
   checkAuth(Role.AGENT),
-  validateRequest(sendMoneyAndCashInZodSchema),
+  validateRequest(sendWithdrawAndCashInZodSchema),
   walletControllers.cashIn
 );
 router.post(
   "/cash-out",
   checkAuth(Role.AGENT),
-  validateRequest(cashOutZodSchema),
+  validateRequest(addMoneyAndCashOutZodSchema),
   walletControllers.cashOut
 );
 
 //only Admin Access
-router.get(
-  "/all",
-  checkAuth(Role.ADMIN),
-  walletControllers.getAllWallets
-);
+router.get("/all", checkAuth(Role.ADMIN), walletControllers.getAllWallets);
 
 router.patch(
   "/block/:id",

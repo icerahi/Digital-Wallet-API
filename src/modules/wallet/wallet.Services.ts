@@ -13,16 +13,50 @@ const myWallet = async (userId: string) => {
   return info;
 };
 
-const addMoney = async (userId: string, amount: number) => {
-  const updatedWallet = await Wallet.addMoney(userId, amount);
+const addMoney = async (payload: Partial<ITransaction>) => {
+  const sender = await User.findOne({ phone: payload.sender });
+  const receiver = await User.findOne({ phone: payload.receiver });
+  if (!sender)
+    throw new AppError(StatusCodes.NOT_FOUND, "Sender does not exist");
 
-  return updatedWallet;
+  if (!receiver) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Receiver does not exist");
+  }
+
+  if (sender.role !== Role.AGENT) {
+    throw new AppError(StatusCodes.FORBIDDEN, `Sender must be an Agent.`);
+  }
+  const transactionInfo = await Wallet.addMoney(
+    sender._id,
+    receiver._id,
+    payload.amount as number
+  );
+
+  return transactionInfo;
 };
 
-const withdrawMoney = async (userId: string, amount: number) => {
-  const updatedWallet = await Wallet.withdrawMoney(userId, amount);
+const withdrawMoney = async (payload: Partial<ITransaction>) => {
+  const sender = await User.findOne({ phone: payload.sender });
+  const receiver = await User.findOne({ phone: payload.receiver });
 
-  return updatedWallet;
+  if (!sender)
+    throw new AppError(StatusCodes.NOT_FOUND, "Sender does not exist");
+
+  if (!receiver) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Receiver does not exist");
+  }
+
+  if (receiver.role !== Role.AGENT) {
+    throw new AppError(StatusCodes.FORBIDDEN, `Receiver must be an Agent.`);
+  }
+
+  const transactionInfo = await Wallet.withdrawMoney(
+    sender._id,
+    receiver._id,
+    payload.amount as number
+  );
+
+  return transactionInfo;
 };
 
 const sendMoney = async (payload: Partial<ITransaction>) => {
@@ -80,7 +114,10 @@ const cashOut = async (payload: Partial<ITransaction>) => {
     throw new AppError(StatusCodes.NOT_FOUND, "Receiver does not exist");
   }
   if (sender.role !== Role.USER) {
-    throw new AppError(StatusCodes.FORBIDDEN, `Sender must be a User.`);
+    throw new AppError(
+      StatusCodes.FORBIDDEN,
+      `Cashout number doesn't associated with a user`
+    );
   }
 
   const transactionInfo = await Wallet.cashOut(
