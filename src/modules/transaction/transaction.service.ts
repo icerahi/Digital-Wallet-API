@@ -18,6 +18,15 @@ const myTransactions = async (
   };
   if (query.type) filter.type = query.type;
 
+  if (query.from && query.to) {
+    let start = new Date(query.from);
+    start.setHours(0, 0, 0, 0);
+
+    let end = new Date(query.to);
+    end.setHours(23, 59, 59, 999);
+    filter.createdAt = { $gte: start, $lte: end };
+  }
+
   const sort = query.sort || "-createdAt";
   const page = Number(query.page) || 1;
   const limit = Number(query.limit) || 10;

@@ -27,6 +27,38 @@ const register = async (payload: IUser) => {
   return userInfo;
 };
 
+const changePassword = async (
+  userId: string,
+  payload: { oldPassword: string; newPassword: string }
+) => {
+  const { oldPassword, newPassword } = payload;
+
+  const user = await User.findById(userId).select("password");
+  if (!user) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "User does not exist");
+  }
+
+  const isPasswordMatched = await bcrypt.compare(
+    oldPassword as string,
+    user.password
+  );
+
+  if (!isPasswordMatched) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, "Password is incorrect");
+  }
+
+  const hashedPassword = await bcrypt.hash(
+    newPassword as string,
+    Number(envVars.BCRYPT_SALT_ROUND)
+  );
+
+  user.password = hashedPassword;
+  await user.save();
+  const { password: pass, ...userInfo } = user.toObject();
+
+  return userInfo;
+};
+
 const getAllUsers = async (query: Record<string, string>) => {
   const filter = query;
   const sort = query.sort || "-createdAt";
@@ -96,4 +128,5 @@ export const userServices = {
   getSingleUser,
   approveAgent,
   suspendAgent,
+  changePassword,
 };

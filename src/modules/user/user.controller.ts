@@ -20,6 +20,24 @@ const register = catchAsync(
   }
 );
 
+const changePassword = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const payload = req.body;
+    const decodedToken = req.user;
+    const user = await userServices.changePassword(
+      decodedToken.userId,
+      payload
+    );
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Password Changed successfully",
+      data: user,
+    });
+  }
+);
+
 const getAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const query = req.query;
@@ -84,4 +102,5 @@ export const userControllers = {
   getSingleUser,
   approveAgent,
   suspendAgent,
+  changePassword,
 };
