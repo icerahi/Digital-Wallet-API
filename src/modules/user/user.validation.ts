@@ -26,8 +26,22 @@ export const createUserZodSchema = z.object({
   role: z.enum(Object.values(Role) as [string]).optional(),
 });
 
+export const updateUserZodSchema = z.object({
+  fullname: z
+    .string({ invalid_type_error: "Fullname must be string" })
+    .min(2, { message: "Fullname atleast 2 charecter long" })
+    .optional(),
+  phone: z
+    .string({ invalid_type_error: "Phone number must be string" })
+    .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
+      message:
+        "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
+    })
+    .optional(),
+});
+
 export const chanagePasswordZodSchema = z.object({
-  oldPassword: z
+  currentPassword: z
     .string({ invalid_type_error: "Password must be string" })
     .min(8, { message: "Password must be at least 8 charecter." })
     .regex(/^(?=.*[A-Z])/, {

@@ -37,6 +37,34 @@ const changePassword = catchAsync(
     });
   }
 );
+const getMe = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user;
+    const user = await userServices.getMe(decodedToken.userId);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "User retrieved successfully",
+      data: user,
+    });
+  }
+);
+
+const updateUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const payload = req.body;
+    const decodedToken = req.user;
+    const user = await userServices.updateUser(decodedToken.userId, payload);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Updated successfully",
+      data: user,
+    });
+  }
+);
 
 const getAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -103,4 +131,6 @@ export const userControllers = {
   approveAgent,
   suspendAgent,
   changePassword,
+  updateUser,
+  getMe,
 };

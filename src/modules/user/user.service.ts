@@ -27,11 +27,16 @@ const register = async (payload: IUser) => {
   return userInfo;
 };
 
+const getMe = async (userId: string) => {
+  const info = await User.findById(userId);
+  return info;
+};
+
 const changePassword = async (
   userId: string,
-  payload: { oldPassword: string; newPassword: string }
+  payload: { currentPassword: string; newPassword: string }
 ) => {
-  const { oldPassword, newPassword } = payload;
+  const { currentPassword, newPassword } = payload;
 
   const user = await User.findById(userId).select("password");
   if (!user) {
@@ -39,12 +44,15 @@ const changePassword = async (
   }
 
   const isPasswordMatched = await bcrypt.compare(
-    oldPassword as string,
+    currentPassword as string,
     user.password
   );
 
   if (!isPasswordMatched) {
-    throw new AppError(StatusCodes.UNAUTHORIZED, "Password is incorrect");
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      "Current Password is incorrect"
+    );
   }
 
   const hashedPassword = await bcrypt.hash(
@@ -57,6 +65,24 @@ const changePassword = async (
   const { password: pass, ...userInfo } = user.toObject();
 
   return userInfo;
+};
+
+const updateUser = async (userId: string, payload: Record<string, string>) => {
+  if (payload.phone) {
+    const phoneExists = await User.findOne({ phone: payload.phone });
+
+    if (phoneExists)
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Phone number already exist."
+      );
+  }
+
+  const user = await User.findOneAndUpdate({ _id: userId }, payload, {
+    new: true,
+    runValidators: true,
+  });
+  return user;
 };
 
 const getAllUsers = async (query: Record<string, string>) => {
@@ -129,4 +155,6 @@ export const userServices = {
   approveAgent,
   suspendAgent,
   changePassword,
+  updateUser,
+  getMe,
 };

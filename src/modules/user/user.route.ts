@@ -6,6 +6,7 @@ import { Role } from "./user.interface";
 import {
   chanagePasswordZodSchema,
   createUserZodSchema,
+  updateUserZodSchema,
 } from "./user.validation";
 
 const router = Router();
@@ -16,9 +17,7 @@ router.post(
   userControllers.register
 );
 
-//only admin access
-router.get("/all-users", checkAuth(Role.ADMIN), userControllers.getAllUsers); //accept query=role and/or phone
-router.get("/:id", checkAuth(Role.ADMIN), userControllers.getSingleUser);
+router.get("/me", checkAuth(...Object.values(Role)), userControllers.getMe);
 
 //possible to approved user as agent
 router.patch(
@@ -38,4 +37,15 @@ router.patch(
   validateRequest(chanagePasswordZodSchema),
   userControllers.changePassword
 );
+router.patch(
+  "/update",
+  checkAuth(...Object.values(Role)),
+  validateRequest(updateUserZodSchema),
+  userControllers.updateUser
+);
+
+//only admin access
+router.get("/all-users", checkAuth(Role.ADMIN), userControllers.getAllUsers); //accept query=role and/or phone
+router.get("/:id", checkAuth(Role.ADMIN), userControllers.getSingleUser);
+
 export const UserRoutes = router;
