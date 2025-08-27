@@ -31,8 +31,12 @@ const myWallet = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void
 }));
 const addMoney = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const decodedToken = req.user;
-    const { amount } = req.body;
-    const wallet = yield wallet_Services_1.walletServices.addMoney(decodedToken.userId, amount);
+    const payload = {
+        sender: req.body.sender,
+        receiver: decodedToken.phone,
+        amount: req.body.amount,
+    };
+    const wallet = yield wallet_Services_1.walletServices.addMoney(payload);
     (0, sendResponse_1.sendResponse)(res, {
         success: true,
         statusCode: http_status_codes_1.StatusCodes.OK,
@@ -42,8 +46,12 @@ const addMoney = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void
 }));
 const withdrawMoney = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const decodedToken = req.user;
-    const { amount } = req.body;
-    const wallet = yield wallet_Services_1.walletServices.withdrawMoney(decodedToken.userId, amount);
+    const payload = {
+        sender: decodedToken.phone,
+        receiver: req.body.receiver,
+        amount: req.body.amount,
+    };
+    const wallet = yield wallet_Services_1.walletServices.withdrawMoney(payload);
     (0, sendResponse_1.sendResponse)(res, {
         success: true,
         statusCode: http_status_codes_1.StatusCodes.OK,

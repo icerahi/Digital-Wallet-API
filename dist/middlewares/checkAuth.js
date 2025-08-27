@@ -21,7 +21,7 @@ const wallet_model_1 = require("../modules/wallet/wallet.model");
 const jwt_1 = require("../utils/jwt");
 const checkAuth = (...authRoles) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const accessToken = req.headers.authorization;
+        const accessToken = req.headers.authorization || req.cookies.accessToken;
         if (!accessToken)
             throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, "No token recieved");
         const verifiedToken = (0, jwt_1.verifyToken)(accessToken, env_1.envVars.JWT_ACCESS_TOKEN_SECRET);

@@ -25,6 +25,38 @@ const register = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void
         data: user,
     });
 }));
+const changePassword = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const payload = req.body;
+    const decodedToken = req.user;
+    const user = yield user_service_1.userServices.changePassword(decodedToken.userId, payload);
+    (0, sendResponse_1.sendResponse)(res, {
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        success: true,
+        message: "Password Changed successfully",
+        data: user,
+    });
+}));
+const getMe = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const decodedToken = req.user;
+    const user = yield user_service_1.userServices.getMe(decodedToken.userId);
+    (0, sendResponse_1.sendResponse)(res, {
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        success: true,
+        message: "User retrieved successfully",
+        data: user,
+    });
+}));
+const updateUser = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const payload = req.body;
+    const decodedToken = req.user;
+    const user = yield user_service_1.userServices.updateUser(decodedToken.userId, payload);
+    (0, sendResponse_1.sendResponse)(res, {
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        success: true,
+        message: "Updated successfully",
+        data: user,
+    });
+}));
 const getAllUsers = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const query = req.query;
     const result = yield user_service_1.userServices.getAllUsers(query);
@@ -72,4 +104,7 @@ exports.userControllers = {
     getSingleUser,
     approveAgent,
     suspendAgent,
+    changePassword,
+    updateUser,
+    getMe,
 };

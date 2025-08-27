@@ -59,6 +59,13 @@ const myTransactions = (userId, query) => __awaiter(void 0, void 0, void 0, func
     };
     if (query.type)
         filter.type = query.type;
+    if (query.from && query.to) {
+        let start = new Date(query.from);
+        start.setHours(0, 0, 0, 0);
+        let end = new Date(query.to);
+        end.setHours(23, 59, 59, 999);
+        filter.createdAt = { $gte: start, $lte: end };
+    }
     const sort = query.sort || "-createdAt";
     const page = Number(query.page) || 1;
     const limit = Number(query.limit) || 10;
@@ -86,20 +93,24 @@ const myTransactions = (userId, query) => __awaiter(void 0, void 0, void 0, func
     };
 });
 const getAllTransactions = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const filter = {};
+    const filter = { $or: [] };
     if (query.type)
         filter.type = query.type;
-    if (query.sender) {
-        const user = yield user_model_1.User.findOne({ phone: query.sender }, "_id");
-        if (!user)
-            throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Number doesn't associate with any user wallet");
-        filter.sender = user._id;
+    if (query.status)
+        filter.status = query.status;
+    if (query.from && query.to) {
+        let start = new Date(query.from);
+        start.setHours(0, 0, 0, 0);
+        let end = new Date(query.to);
+        end.setHours(23, 59, 59, 999);
+        filter.createdAt = { $gte: start, $lte: end };
     }
-    if (query.receiver) {
-        const user = yield user_model_1.User.findOne({ phone: query.receiver }, "_id");
+    if (query.phone) {
+        const user = yield user_model_1.User.findOne({ phone: query.phone }, "_id");
         if (!user)
             throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Number doesn't associate with any user wallet");
-        filter.receiver = user._id;
+        filter.$or.push({ sender: user._id });
+        filter.$or.push({ receiver: user._id });
     }
     const sort = query.sort || "-createdAt";
     const page = Number(query.page) || 1;

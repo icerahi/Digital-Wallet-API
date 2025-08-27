@@ -35,18 +35,56 @@ const register = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { phone, password } = payload, rest = __rest(payload, ["phone", "password"]);
     const isUserExist = yield user_model_1.User.findOne({ phone });
     if (isUserExist)
-        throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "User already exist");
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "User already exist with the Phone Number");
     const hashedPassword = yield bcryptjs_1.default.hash(password, Number(env_1.envVars.BCRYPT_SALT_ROUND));
     const user = yield user_model_1.User.create(Object.assign({ phone, password: hashedPassword }, rest));
     const _a = user.toObject(), { password: pass } = _a, userInfo = __rest(_a, ["password"]);
     return userInfo;
 });
+const getMe = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const info = yield user_model_1.User.findById(userId);
+    return info;
+});
+const changePassword = (userId, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const { currentPassword, newPassword } = payload;
+    const user = yield user_model_1.User.findById(userId).select("password");
+    if (!user) {
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "User does not exist");
+    }
+    const isPasswordMatched = yield bcryptjs_1.default.compare(currentPassword, user.password);
+    if (!isPasswordMatched) {
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "Current Password is incorrect");
+    }
+    const hashedPassword = yield bcryptjs_1.default.hash(newPassword, Number(env_1.envVars.BCRYPT_SALT_ROUND));
+    user.password = hashedPassword;
+    yield user.save();
+    const _a = user.toObject(), { password: pass } = _a, userInfo = __rest(_a, ["password"]);
+    return userInfo;
+});
+const updateUser = (userId, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    if (payload.phone) {
+        const phoneExists = yield user_model_1.User.findOne({ phone: payload.phone });
+        if (phoneExists)
+            throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "Phone number already exist.");
+    }
+    const user = yield user_model_1.User.findOneAndUpdate({ _id: userId }, payload, {
+        new: true,
+        runValidators: true,
+    });
+    return user;
+});
 const getAllUsers = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const filter = query;
+    const filter = {};
     const sort = query.sort || "-createdAt";
     const page = Number(query.page) || 1;
     const limit = Number(query.limit) || 10;
     const skip = (page - 1) * Number(limit);
+    if (query.role)
+        filter.role = query.role;
+    if (query.phone)
+        filter.phone = query.phone;
+    if (query.agentApproval)
+        filter.agentApproval = query.agentApproval;
     const users = yield user_model_1.User.find(filter).sort(sort).skip(skip).limit(limit);
     const total = yield user_model_1.User.countDocuments(filter);
     const totalPages = Math.ceil(total / limit);
@@ -89,4 +127,7 @@ exports.userServices = {
     getSingleUser,
     approveAgent,
     suspendAgent,
+    changePassword,
+    updateUser,
+    getMe,
 };

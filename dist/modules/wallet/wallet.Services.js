@@ -22,13 +22,33 @@ const myWallet = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const info = yield wallet_model_1.Wallet.findOne({ owner: userId }).populate("owner", "fullname phone role");
     return info;
 });
-const addMoney = (userId, amount) => __awaiter(void 0, void 0, void 0, function* () {
-    const updatedWallet = yield wallet_model_1.Wallet.addMoney(userId, amount);
-    return updatedWallet;
+const addMoney = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const sender = yield user_model_1.User.findOne({ phone: payload.sender });
+    const receiver = yield user_model_1.User.findOne({ phone: payload.receiver });
+    if (!sender)
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Sender does not exist");
+    if (!receiver) {
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Receiver does not exist");
+    }
+    if (sender.role !== user_interface_1.Role.AGENT) {
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, `Sender must be an Agent.`);
+    }
+    const transactionInfo = yield wallet_model_1.Wallet.addMoney(sender._id, receiver._id, payload.amount);
+    return transactionInfo;
 });
-const withdrawMoney = (userId, amount) => __awaiter(void 0, void 0, void 0, function* () {
-    const updatedWallet = yield wallet_model_1.Wallet.withdrawMoney(userId, amount);
-    return updatedWallet;
+const withdrawMoney = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const sender = yield user_model_1.User.findOne({ phone: payload.sender });
+    const receiver = yield user_model_1.User.findOne({ phone: payload.receiver });
+    if (!sender)
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Sender does not exist");
+    if (!receiver) {
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Receiver does not exist");
+    }
+    if (receiver.role !== user_interface_1.Role.AGENT) {
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, `Receiver must be an Agent.`);
+    }
+    const transactionInfo = yield wallet_model_1.Wallet.withdrawMoney(sender._id, receiver._id, payload.amount);
+    return transactionInfo;
 });
 const sendMoney = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const sender = yield user_model_1.User.findOne({ phone: payload.sender });
@@ -67,7 +87,7 @@ const cashOut = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Receiver does not exist");
     }
     if (sender.role !== user_interface_1.Role.USER) {
-        throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, `Sender must be a User.`);
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, `Cashout number doesn't associated with a user`);
     }
     const transactionInfo = yield wallet_model_1.Wallet.cashOut(sender._id, receiver._id, payload.amount);
     return transactionInfo;
@@ -80,7 +100,11 @@ const getAllWallets = (query) => __awaiter(void 0, void 0, void 0, function* () 
     const limit = Number(query.limit) || 10;
     const skip = (page - 1) * Number(limit);
     if (query.isBlocked)
-        filter.isBlocked = Boolean(query.isBlocked);
+        filter.isBlocked = query.isBlocked;
+    if (query.role) {
+        const users = yield user_model_1.User.find({ role: query.role }, "_id");
+        filter.owner = users.map((u) => u._id);
+    }
     if (query.phone) {
         const user = yield user_model_1.User.findOne({ phone: query.phone }, "_id");
         if (!user)
@@ -91,7 +115,7 @@ const getAllWallets = (query) => __awaiter(void 0, void 0, void 0, function* () 
         .sort(sort)
         .skip(skip)
         .limit(limit)
-        .populate("owner", "fullname phone role");
+        .populate("owner", "fullname phone role agentApproval");
     const total = yield wallet_model_1.Wallet.countDocuments(filter);
     const totalPages = Math.ceil(total / limit);
     return {
