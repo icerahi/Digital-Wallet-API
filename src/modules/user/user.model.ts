@@ -21,12 +21,10 @@ userSchema.pre("save", function (next) {
   next();
 });
 
-userSchema;
-
 userSchema.post("save", async (doc) => {
   if (doc) {
     if (doc.role === Role.USER || doc.role === Role.AGENT) {
-      const isWalletExist = await Wallet.findById(doc._id);
+      const isWalletExist = await Wallet.findOne({ owner: doc._id });
       if (!isWalletExist) {
         await Wallet.create({ owner: doc._id });
       }

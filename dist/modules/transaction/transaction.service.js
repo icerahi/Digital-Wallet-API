@@ -60,8 +60,10 @@ const myTransactions = (userId, query) => __awaiter(void 0, void 0, void 0, func
     if (query.type)
         filter.type = query.type;
     if (query.from && query.to) {
-        const start = new Date(query.from + "T00:00:00.000Z"); // start of day UTC
-        const end = new Date(query.to + "T23:59:59.999Z"); // end of day UTC
+        let start = new Date(query.from);
+        start.setHours(0, 0, 0, 0);
+        let end = new Date(query.to);
+        end.setHours(23, 59, 59, 999);
         filter.createdAt = { $gte: start, $lte: end };
     }
     const sort = query.sort || "-createdAt";

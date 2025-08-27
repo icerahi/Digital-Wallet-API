@@ -33,7 +33,6 @@ const checkAuth = (...authRoles) => (req, res, next) => __awaiter(void 0, void 0
             const isWalletExist = yield wallet_model_1.Wallet.findOne({
                 owner: verifiedToken.userId,
             });
-            console.log(isWalletExist);
             if (!isWalletExist)
                 throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Wallet doesn't exist");
             if (isWalletExist.isBlocked) {
