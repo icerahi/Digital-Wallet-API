@@ -11,7 +11,7 @@ export const checkAuth =
   (...authRoles: string[]) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const accessToken = req.headers.authorization || req.cookies.accessToken;
+      const accessToken = req.cookies.accessToken || req.headers.authorization;
 
       if (!accessToken)
         throw new AppError(StatusCodes.FORBIDDEN, "No token recieved");
@@ -33,6 +33,7 @@ export const checkAuth =
           owner: verifiedToken.userId,
         });
 
+        console.log(isWalletExist);
         if (!isWalletExist)
           throw new AppError(StatusCodes.NOT_FOUND, "Wallet doesn't exist");
 

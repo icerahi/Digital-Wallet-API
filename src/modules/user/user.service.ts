@@ -28,8 +28,9 @@ const register = async (payload: IUser) => {
 };
 
 const getMe = async (userId: string) => {
-  const info = await User.findById(userId);
-  return info;
+  const user = await User.findById(userId);
+
+  return user;
 };
 
 const changePassword = async (

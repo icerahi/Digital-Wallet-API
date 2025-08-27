@@ -9,6 +9,7 @@ import { createUserToken } from "../../utils/createUserToken";
 import { generateToken, verifyToken } from "../../utils/jwt";
 import { IUser } from "../user/user.interface";
 import { User } from "../user/user.model";
+import { Wallet } from "../wallet/wallet.model";
 const credentialLogin = async (payload: Partial<IUser>) => {
   const { phone, password } = payload;
 
@@ -16,6 +17,16 @@ const credentialLogin = async (payload: Partial<IUser>) => {
 
   if (!isUserExist) {
     throw new AppError(StatusCodes.NOT_FOUND, "User not found");
+  }
+
+  const isWalletExist = await Wallet.findOne({ owner: isUserExist._id });
+
+  if (!isWalletExist) {
+    throw new AppError(StatusCodes.NOT_FOUND, "You does not have any wallet!");
+  }
+
+  if (isWalletExist.isBlocked) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Your Wallet is blocked");
   }
 
   const isPasswordMatched = await bcrypt.compare(

@@ -8,7 +8,7 @@ import { Wallet } from "./wallet.model";
 const myWallet = async (userId: string) => {
   const info = await Wallet.findOne({ owner: userId }).populate(
     "owner",
-    "fullname phone role"
+    "fullname phone role agentApproval"
   );
   return info;
 };
@@ -26,6 +26,11 @@ const addMoney = async (payload: Partial<ITransaction>) => {
   if (sender.role !== Role.AGENT) {
     throw new AppError(StatusCodes.FORBIDDEN, `Sender must be an Agent.`);
   }
+
+  if (!sender.agentApproval) {
+    throw new AppError(StatusCodes.FORBIDDEN, `Agent has been suspended`);
+  }
+
   const transactionInfo = await Wallet.addMoney(
     sender._id,
     receiver._id,
@@ -48,6 +53,10 @@ const withdrawMoney = async (payload: Partial<ITransaction>) => {
 
   if (receiver.role !== Role.AGENT) {
     throw new AppError(StatusCodes.FORBIDDEN, `Receiver must be an Agent.`);
+  }
+
+  if (!receiver.agentApproval) {
+    throw new AppError(StatusCodes.FORBIDDEN, `Agent has been suspended`);
   }
 
   const transactionInfo = await Wallet.withdrawMoney(
@@ -95,6 +104,13 @@ const cashIn = async (payload: Partial<ITransaction>) => {
     throw new AppError(StatusCodes.FORBIDDEN, `Receiver must be a User.`);
   }
 
+  if (!sender.agentApproval) {
+    throw new AppError(
+      StatusCodes.FORBIDDEN,
+      `You have been suspended! You can not perform this operation!`
+    );
+  }
+
   const transactionInfo = await Wallet.cashIn(
     sender._id,
     receiver._id,
@@ -117,6 +133,13 @@ const cashOut = async (payload: Partial<ITransaction>) => {
     throw new AppError(
       StatusCodes.FORBIDDEN,
       `Cashout number doesn't associated with a user`
+    );
+  }
+
+  if (!receiver.agentApproval) {
+    throw new AppError(
+      StatusCodes.FORBIDDEN,
+      `You have been suspended! You can not perform this operation!`
     );
   }
 
