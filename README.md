@@ -28,10 +28,11 @@ This API provides a scalable foundation for a digital wallet system. It includes
 
 ### 👤 User Features
 
+- **User Profile Management**: Get user details, update profile, and change password
 - **Add Money**: Top-up wallet (e.g., from bank or card)
 - **Withdraw Money**: Transfer to external accounts (e.g., ATM, bank)
 - **Send Money**: Transfer funds to another user via phone number
-- **View Transactions**: Paginated, filterable history
+- **View Transactions**: Paginated, filterable history (including by date range)
 
 ### 🧾 Agent Features
 
@@ -70,13 +71,16 @@ This API provides a scalable foundation for a digital wallet system. It includes
 
 ### 👥 User Management
 
-| Method | Endpoint                          | Description             | Access | Query Parameters                         |
-| ------ | --------------------------------- | ----------------------- | ------ | ---------------------------------------- |
-| POST   | `/api/v1/users/register`          | Register new user/agent | Public | -                                        |
-| GET    | `/api/v1/users/all-users`         | Get all users           | Admin  | `role`, `phone`, `sort`, `page`, `limit` |
-| GET    | `/api/v1/users/:id`               | Get user by ID          | Admin  | -                                        |
-| PATCH  | `/api/v1/users/approve-agent/:id` | Approve agent role      | Admin  | -                                        |
-| PATCH  | `/api/v1/users/suspend-agent/:id` | Revoke agent role       | Admin  | -                                        |
+| Method | Endpoint                          | Description             | Access        | Query Parameters                         |
+| ------ | --------------------------------- | ----------------------- | ------------- | ---------------------------------------- |
+| POST   | `/api/v1/users/register`          | Register new user/agent | Public        | -                                        |
+| GET    | `/api/v1/users/me`                | Get own user profile    | Authenticated | -                                        |
+| PATCH  | `/api/v1/users/update`            | Update own user profile | Authenticated | -                                        |
+| PATCH  | `/api/v1/users/change-password`   | Change own password     | Authenticated | -                                        |
+| GET    | `/api/v1/users/all-users`         | Get all users           | Admin         | `role`, `phone`, `sort`, `page`, `limit` |
+| GET    | `/api/v1/users/:id`               | Get user by ID          | Admin         | -                                        |
+| PATCH  | `/api/v1/users/approve-agent/:id` | Approve agent role      | Admin         | -                                        |
+| PATCH  | `/api/v1/users/suspend-agent/:id` | Revoke agent role       | Admin         | -                                        |
 
 **Registration Request:**
 
@@ -134,12 +138,12 @@ This API provides a scalable foundation for a digital wallet system. It includes
 
 ### 📈 Transaction Management
 
-| Method | Endpoint                   | Description               | Access     | Query Parameters                                      |
-| ------ | -------------------------- | ------------------------- | ---------- | ----------------------------------------------------- |
-| GET    | `/api/v1/transactions/me`  | Get own transaction logs  | User/Agent | `type`, `sort`, `page`, `limit`                       |
-| GET    | `/api/v1/transactions/all` | Get all transactions      | Admin      | `type`, `sender`, `receiver`, `sort`, `page`, `limit` |
-| GET    | `/api/v1/transactions/:id` | Get transaction by ID     | Admin      | -                                                     |
-| PATCH  | `/api/v1/transactions/:id` | Update transaction status | Admin      | -                                                     |
+| Method | Endpoint                   | Description               | Access     | Query Parameters                                            |
+| ------ | -------------------------- | ------------------------- | ---------- | ----------------------------------------------------------- |
+| GET    | `/api/v1/transactions/me`  | Get own transaction logs  | User/Agent | `type`, `from`, `to`, `sort`, `page`, `limit`               |
+| GET    | `/api/v1/transactions/all` | Get all transactions      | Admin      | `type`, `sender`, `receiver`, `from`, `to`, `sort`, `page`, `limit` |
+| GET    | `/api/v1/transactions/:id` | Get transaction by ID     | Admin      | -                                                           |
+| PATCH  | `/api/v1/transactions/:id` | Update transaction status | Admin      | -                                                           |
 
 **Status Update Request:**
 
@@ -210,6 +214,7 @@ src/
 | `PORT`                      | Server port                  | `5000`        |
 | `DB_URL`                    | MongoDB connection string    | Required      |
 | `NODE_ENV`                  | Environment (e.g., `dev`)    | `development` |
+| `FRONTEND_URL`              | Frontend URL for CORS        | Required      |
 | `BCRYPT_SALT_ROUND`         | Salt rounds for bcrypt       | `12`          |
 | `JWT_ACCESS_TOKEN_SECRET`   | Access token secret key      | Required      |
 | `JWT_ACCESS_TOKEN_EXPIRES`  | Access token expiry duration | `15m`         |
