@@ -42,8 +42,8 @@ const register = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return userInfo;
 });
 const getMe = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const info = yield user_model_1.User.findById(userId);
-    return info;
+    const user = yield user_model_1.User.findById(userId);
+    return user;
 });
 const changePassword = (userId, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { currentPassword, newPassword } = payload;

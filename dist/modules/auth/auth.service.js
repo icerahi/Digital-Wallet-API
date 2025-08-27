@@ -32,11 +32,16 @@ const AppError_1 = __importDefault(require("../../helpers/AppError"));
 const createUserToken_1 = require("../../utils/createUserToken");
 const jwt_1 = require("../../utils/jwt");
 const user_model_1 = require("../user/user.model");
+const wallet_model_1 = require("../wallet/wallet.model");
 const credentialLogin = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { phone, password } = payload;
     const isUserExist = yield user_model_1.User.findOne({ phone }).select("+password");
     if (!isUserExist) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "User not found");
+    }
+    const isWalletExist = yield wallet_model_1.Wallet.findOne({ owner: isUserExist._id });
+    if (isWalletExist && isWalletExist.isBlocked) {
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "Your Wallet is blocked");
     }
     const isPasswordMatched = yield bcryptjs_1.default.compare(password, isUserExist.password);
     if (!isPasswordMatched) {

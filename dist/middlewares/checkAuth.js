@@ -21,7 +21,7 @@ const wallet_model_1 = require("../modules/wallet/wallet.model");
 const jwt_1 = require("../utils/jwt");
 const checkAuth = (...authRoles) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const accessToken = req.headers.authorization || req.cookies.accessToken;
+        const accessToken = req.cookies.accessToken || req.headers.authorization;
         if (!accessToken)
             throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, "No token recieved");
         const verifiedToken = (0, jwt_1.verifyToken)(accessToken, env_1.envVars.JWT_ACCESS_TOKEN_SECRET);
@@ -33,6 +33,7 @@ const checkAuth = (...authRoles) => (req, res, next) => __awaiter(void 0, void 0
             const isWalletExist = yield wallet_model_1.Wallet.findOne({
                 owner: verifiedToken.userId,
             });
+            console.log(isWalletExist);
             if (!isWalletExist)
                 throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Wallet doesn't exist");
             if (isWalletExist.isBlocked) {

@@ -21,11 +21,7 @@ const credentialLogin = async (payload: Partial<IUser>) => {
 
   const isWalletExist = await Wallet.findOne({ owner: isUserExist._id });
 
-  if (!isWalletExist) {
-    throw new AppError(StatusCodes.NOT_FOUND, "You does not have any wallet!");
-  }
-
-  if (isWalletExist.isBlocked) {
+  if (isWalletExist && isWalletExist.isBlocked) {
     throw new AppError(StatusCodes.BAD_REQUEST, "Your Wallet is blocked");
   }
 

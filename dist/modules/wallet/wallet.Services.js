@@ -19,7 +19,7 @@ const user_interface_1 = require("../user/user.interface");
 const user_model_1 = require("../user/user.model");
 const wallet_model_1 = require("./wallet.model");
 const myWallet = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const info = yield wallet_model_1.Wallet.findOne({ owner: userId }).populate("owner", "fullname phone role");
+    const info = yield wallet_model_1.Wallet.findOne({ owner: userId }).populate("owner", "fullname phone role agentApproval");
     return info;
 });
 const addMoney = (payload) => __awaiter(void 0, void 0, void 0, function* () {
@@ -32,6 +32,9 @@ const addMoney = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     }
     if (sender.role !== user_interface_1.Role.AGENT) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, `Sender must be an Agent.`);
+    }
+    if (!sender.agentApproval) {
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, `Agent has been suspended`);
     }
     const transactionInfo = yield wallet_model_1.Wallet.addMoney(sender._id, receiver._id, payload.amount);
     return transactionInfo;
@@ -46,6 +49,9 @@ const withdrawMoney = (payload) => __awaiter(void 0, void 0, void 0, function* (
     }
     if (receiver.role !== user_interface_1.Role.AGENT) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, `Receiver must be an Agent.`);
+    }
+    if (!receiver.agentApproval) {
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, `Agent has been suspended`);
     }
     const transactionInfo = yield wallet_model_1.Wallet.withdrawMoney(sender._id, receiver._id, payload.amount);
     return transactionInfo;
@@ -74,6 +80,9 @@ const cashIn = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     if (receiver.role !== user_interface_1.Role.USER) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, `Receiver must be a User.`);
     }
+    if (!sender.agentApproval) {
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, `You have been suspended! You can not perform this operation!`);
+    }
     const transactionInfo = yield wallet_model_1.Wallet.cashIn(sender._id, receiver._id, payload.amount);
     return transactionInfo;
 });
@@ -88,6 +97,9 @@ const cashOut = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     }
     if (sender.role !== user_interface_1.Role.USER) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, `Cashout number doesn't associated with a user`);
+    }
+    if (!receiver.agentApproval) {
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, `You have been suspended! You can not perform this operation!`);
     }
     const transactionInfo = yield wallet_model_1.Wallet.cashOut(sender._id, receiver._id, payload.amount);
     return transactionInfo;
