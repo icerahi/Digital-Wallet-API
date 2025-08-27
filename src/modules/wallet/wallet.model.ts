@@ -40,7 +40,7 @@ walletSchema.statics.withdrawMoney = async function (
 
 walletSchema.statics.sendMoney = async function (senderId, receiverId, amount) {
   const transactionInfo = performCommonTransaction(
-    TransactionType.WITHDRAW_MONEY,
+    TransactionType.SEND_MONEY,
     senderId,
     receiverId,
     amount

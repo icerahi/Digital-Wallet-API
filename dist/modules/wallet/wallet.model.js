@@ -34,7 +34,7 @@ walletSchema.statics.withdrawMoney = function (senderId, receiverId, amount) {
 };
 walletSchema.statics.sendMoney = function (senderId, receiverId, amount) {
     return __awaiter(this, void 0, void 0, function* () {
-        const transactionInfo = (0, wallet_1.performCommonTransaction)(transaction_interface_1.TransactionType.WITHDRAW_MONEY, senderId, receiverId, amount);
+        const transactionInfo = (0, wallet_1.performCommonTransaction)(transaction_interface_1.TransactionType.SEND_MONEY, senderId, receiverId, amount);
         return transactionInfo;
     });
 };
