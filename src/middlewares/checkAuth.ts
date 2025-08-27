@@ -33,7 +33,6 @@ export const checkAuth =
           owner: verifiedToken.userId,
         });
 
-        console.log(isWalletExist);
         if (!isWalletExist)
           throw new AppError(StatusCodes.NOT_FOUND, "Wallet doesn't exist");
 
