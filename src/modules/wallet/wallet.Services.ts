@@ -136,7 +136,12 @@ const getAllWallets = async (query: Record<string, string>) => {
   const limit = Number(query.limit) || 10;
   const skip = (page - 1) * Number(limit);
 
-  if (query.isBlocked) filter.isBlocked = Boolean(query.isBlocked);
+  if (query.isBlocked) filter.isBlocked = query.isBlocked;
+
+  if (query.role) {
+    const users = await User.find({ role: query.role }, "_id");
+    filter.owner = users.map((u) => u._id);
+  }
 
   if (query.phone) {
     const user = await User.findOne({ phone: query.phone }, "_id");
@@ -152,7 +157,7 @@ const getAllWallets = async (query: Record<string, string>) => {
     .sort(sort)
     .skip(skip)
     .limit(limit)
-    .populate("owner", "fullname phone role");
+    .populate("owner", "fullname phone role agentApproval");
 
   const total = await Wallet.countDocuments(filter);
   const totalPages = Math.ceil(total / limit);

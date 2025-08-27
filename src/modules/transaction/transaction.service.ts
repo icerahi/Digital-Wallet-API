@@ -59,27 +59,30 @@ const myTransactions = async (
 };
 
 const getAllTransactions = async (query: Record<string, string>) => {
-  const filter: any = {};
-  if (query.type) filter.type = query.type;
+  const filter: any = { $or: [] };
 
-  if (query.sender) {
-    const user = await User.findOne({ phone: query.sender }, "_id");
-    if (!user)
-      throw new AppError(
-        StatusCodes.NOT_FOUND,
-        "Number doesn't associate with any user wallet"
-      );
-    filter.sender = user._id;
+  if (query.type) filter.type = query.type;
+  if (query.status) filter.status = query.status;
+
+  if (query.from && query.to) {
+    let start = new Date(query.from);
+    start.setHours(0, 0, 0, 0);
+
+    let end = new Date(query.to);
+    end.setHours(23, 59, 59, 999);
+    filter.createdAt = { $gte: start, $lte: end };
   }
 
-  if (query.receiver) {
-    const user = await User.findOne({ phone: query.receiver }, "_id");
+  if (query.phone) {
+    const user = await User.findOne({ phone: query.phone }, "_id");
     if (!user)
       throw new AppError(
         StatusCodes.NOT_FOUND,
         "Number doesn't associate with any user wallet"
       );
-    filter.receiver = user._id;
+
+    filter.$or.push({ sender: user._id });
+    filter.$or.push({ receiver: user._id });
   }
 
   const sort = query.sort || "-createdAt";
