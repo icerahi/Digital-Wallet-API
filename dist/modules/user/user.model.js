@@ -26,11 +26,10 @@ userSchema.pre("save", function (next) {
     }
     next();
 });
-userSchema;
 userSchema.post("save", (doc) => __awaiter(void 0, void 0, void 0, function* () {
     if (doc) {
         if (doc.role === user_interface_1.Role.USER || doc.role === user_interface_1.Role.AGENT) {
-            const isWalletExist = yield wallet_model_1.Wallet.findById(doc._id);
+            const isWalletExist = yield wallet_model_1.Wallet.findOne({ owner: doc._id });
             if (!isWalletExist) {
                 yield wallet_model_1.Wallet.create({ owner: doc._id });
             }
