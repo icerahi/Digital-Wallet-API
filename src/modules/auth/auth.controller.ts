@@ -57,7 +57,6 @@ const getNewAccessToken = catchAsync(
     }
 
     const accessToken = await authServices.getNewAccessToken(refreshToken);
-    console.log(accessToken);
 
     sendResponse(res, {
       success: true,

@@ -55,7 +55,6 @@ const getNewAccessToken = (0, catchAsync_1.catchAsync)((req, res, next) => __awa
         throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "No refresh token recieved from cookies");
     }
     const accessToken = yield auth_service_1.authServices.getNewAccessToken(refreshToken);
-    console.log(accessToken);
     (0, sendResponse_1.sendResponse)(res, {
         success: true,
         statusCode: http_status_codes_1.StatusCodes.OK,

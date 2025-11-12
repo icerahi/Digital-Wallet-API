@@ -34,8 +34,8 @@ const jwt_1 = require("../../utils/jwt");
 const user_model_1 = require("../user/user.model");
 const wallet_model_1 = require("../wallet/wallet.model");
 const credentialLogin = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const { phone, password } = payload;
-    const isUserExist = yield user_model_1.User.findOne({ phone }).select("+password");
+    const { email, password } = payload;
+    const isUserExist = yield user_model_1.User.findOne({ email }).select("+password");
     if (!isUserExist) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "User not found");
     }
@@ -58,7 +58,7 @@ const getNewAccessToken = (refreshToken) => __awaiter(void 0, void 0, void 0, fu
         throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "User does not exist");
     const JwtPayload = {
         userId: isUserExist._id,
-        phone: isUserExist.phone,
+        email: isUserExist.email,
         role: isUserExist.role,
     };
     const accessToken = (0, jwt_1.generateToken)(JwtPayload, env_1.envVars.JWT_ACCESS_TOKEN_SECRET, env_1.envVars.JWT_ACCESS_TOKEN_EXPIRES);

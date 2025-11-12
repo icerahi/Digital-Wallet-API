@@ -32,12 +32,16 @@ const AppError_1 = __importDefault(require("../../helpers/AppError"));
 const user_interface_1 = require("./user.interface");
 const user_model_1 = require("./user.model");
 const register = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const { phone, password } = payload, rest = __rest(payload, ["phone", "password"]);
-    const isUserExist = yield user_model_1.User.findOne({ phone });
-    if (isUserExist)
+    const { email, phone, password } = payload, rest = __rest(payload, ["email", "phone", "password"]);
+    const isPhoneExist = yield user_model_1.User.findOne({ phone });
+    if (isPhoneExist)
         throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "User already exist with the Phone Number");
+    const isEmailExist = yield user_model_1.User.findOne({ email });
+    if (isEmailExist)
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "User already exist with the email address");
     const hashedPassword = yield bcryptjs_1.default.hash(password, Number(env_1.envVars.BCRYPT_SALT_ROUND));
-    const user = yield user_model_1.User.create(Object.assign({ phone, password: hashedPassword }, rest));
+    const user = yield user_model_1.User.create(Object.assign({ email,
+        phone, password: hashedPassword }, rest));
     const _a = user.toObject(), { password: pass } = _a, userInfo = __rest(_a, ["password"]);
     return userInfo;
 });
@@ -67,6 +71,11 @@ const updateUser = (userId, payload) => __awaiter(void 0, void 0, void 0, functi
         if (phoneExists)
             throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "Phone number already exist.");
     }
+    if (payload.email) {
+        const emailExist = yield user_model_1.User.findOne({ email: payload.email });
+        if (emailExist)
+            throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "Email already exist");
+    }
     const user = yield user_model_1.User.findOneAndUpdate({ _id: userId }, payload, {
         new: true,
         runValidators: true,
@@ -83,6 +92,8 @@ const getAllUsers = (query) => __awaiter(void 0, void 0, void 0, function* () {
         filter.role = query.role;
     if (query.phone)
         filter.phone = query.phone;
+    if (query.email)
+        filter.email = query.email;
     if (query.agentApproval)
         filter.agentApproval = query.agentApproval;
     const users = yield user_model_1.User.find(filter).sort(sort).skip(skip).limit(limit);

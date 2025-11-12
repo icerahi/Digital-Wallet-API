@@ -76,9 +76,9 @@ const myTransactions = (userId, query) => __awaiter(void 0, void 0, void 0, func
         .limit(limit);
     for (const tx of transactions) {
         if ((0, mongoose_1.isValidObjectId)(tx.sender))
-            yield tx.populate("sender", "fullname phone role");
+            yield tx.populate("sender", "fullname email role");
         if ((0, mongoose_1.isValidObjectId)(tx.receiver))
-            yield tx.populate("receiver", "fullname phone role");
+            yield tx.populate("receiver", "fullname email role");
     }
     const total = yield transaction_model_1.Transaction.countDocuments(filter);
     const totalPages = Math.ceil(total / limit);
@@ -105,8 +105,8 @@ const getAllTransactions = (query) => __awaiter(void 0, void 0, void 0, function
         end.setHours(23, 59, 59, 999);
         filter.createdAt = { $gte: start, $lte: end };
     }
-    if (query.phone) {
-        const user = yield user_model_1.User.findOne({ phone: query.phone }, "_id");
+    if (query.email) {
+        const user = yield user_model_1.User.findOne({ email: query.email }, "_id");
         if (!user)
             throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Number doesn't associate with any user wallet");
         filter.$or.push({ sender: user._id });
@@ -122,9 +122,9 @@ const getAllTransactions = (query) => __awaiter(void 0, void 0, void 0, function
         .limit(limit);
     for (const tx of result) {
         if ((0, mongoose_1.isValidObjectId)(tx.sender))
-            yield tx.populate("sender", "fullname phone role");
+            yield tx.populate("sender", "fullname email role");
         if ((0, mongoose_1.isValidObjectId)(tx.receiver))
-            yield tx.populate("receiver", "fullname phone role");
+            yield tx.populate("receiver", "fullname email role");
     }
     const total = yield transaction_model_1.Transaction.countDocuments(filter);
     const totalPages = Math.ceil(total / limit);
@@ -139,10 +139,10 @@ const getSingleTransaction = (transactionId) => __awaiter(void 0, void 0, void 0
         throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Transaction not found");
     }
     if ((0, mongoose_1.isValidObjectId)(transaction.sender))
-        yield transaction.populate("sender", "fullname phone role");
+        yield transaction.populate("sender", "fullname email role");
     if ((0, mongoose_1.isValidObjectId)(transaction.receiver))
-        yield transaction.populate("receiver", "fullname phone role");
-    return transaction; //.populate("sender receiver", "fullname phone role");
+        yield transaction.populate("receiver", "fullname email role");
+    return transaction; //.populate("sender receiver", "fullname email role");
 });
 const updateTransactionStatus = (transactionId, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const transaction = yield transaction_model_1.Transaction.findById(transactionId);

@@ -6,7 +6,7 @@ import { User } from "../modules/user/user.model";
 export const seedSuperAdmin = async () => {
   try {
     const isSuperAdminExist = await User.findOne({
-      phone: envVars.SUPER_ADMIN_PHONE,
+      email: envVars.SUPER_ADMIN_EMAIL,
     });
 
     if (isSuperAdminExist) {
@@ -22,7 +22,7 @@ export const seedSuperAdmin = async () => {
     const payload: IUser = {
       fullname: "Super Admin",
       role: Role.SUPERADMIN,
-      phone: envVars.SUPER_ADMIN_PHONE,
+      email: envVars.SUPER_ADMIN_EMAIL,
       password: hashedPassword,
     };
     const superAdmin = await User.create(payload);

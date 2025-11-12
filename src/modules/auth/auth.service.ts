@@ -10,10 +10,11 @@ import { generateToken, verifyToken } from "../../utils/jwt";
 import { IUser } from "../user/user.interface";
 import { User } from "../user/user.model";
 import { Wallet } from "../wallet/wallet.model";
-const credentialLogin = async (payload: Partial<IUser>) => {
-  const { phone, password } = payload;
 
-  const isUserExist = await User.findOne({ phone }).select("+password");
+const credentialLogin = async (payload: Partial<IUser>) => {
+  const { email, password } = payload;
+
+  const isUserExist = await User.findOne({ email }).select("+password");
 
   if (!isUserExist) {
     throw new AppError(StatusCodes.NOT_FOUND, "User not found");
@@ -55,7 +56,7 @@ const getNewAccessToken = async (refreshToken: string) => {
 
   const JwtPayload = {
     userId: isUserExist._id,
-    phone: isUserExist.phone,
+    email: isUserExist.email,
     role: isUserExist.role,
   };
   const accessToken = generateToken(

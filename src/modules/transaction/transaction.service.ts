@@ -39,9 +39,9 @@ const myTransactions = async (
 
   for (const tx of transactions) {
     if (isValidObjectId(tx.sender))
-      await tx.populate("sender", "fullname phone role");
+      await tx.populate("sender", "fullname email role");
     if (isValidObjectId(tx.receiver))
-      await tx.populate("receiver", "fullname phone role");
+      await tx.populate("receiver", "fullname email role");
   }
 
   const total = await Transaction.countDocuments(filter);
@@ -73,8 +73,8 @@ const getAllTransactions = async (query: Record<string, string>) => {
     filter.createdAt = { $gte: start, $lte: end };
   }
 
-  if (query.phone) {
-    const user = await User.findOne({ phone: query.phone }, "_id");
+  if (query.email) {
+    const user = await User.findOne({ email: query.email }, "_id");
     if (!user)
       throw new AppError(
         StatusCodes.NOT_FOUND,
@@ -97,9 +97,9 @@ const getAllTransactions = async (query: Record<string, string>) => {
 
   for (const tx of result) {
     if (isValidObjectId(tx.sender))
-      await tx.populate("sender", "fullname phone role");
+      await tx.populate("sender", "fullname email role");
     if (isValidObjectId(tx.receiver))
-      await tx.populate("receiver", "fullname phone role");
+      await tx.populate("receiver", "fullname email role");
   }
   const total = await Transaction.countDocuments(filter);
   const totalPages = Math.ceil(total / limit);
@@ -117,11 +117,11 @@ const getSingleTransaction = async (transactionId: string) => {
   }
 
   if (isValidObjectId(transaction.sender))
-    await transaction.populate("sender", "fullname phone role");
+    await transaction.populate("sender", "fullname email role");
   if (isValidObjectId(transaction.receiver))
-    await transaction.populate("receiver", "fullname phone role");
+    await transaction.populate("receiver", "fullname email role");
 
-  return transaction; //.populate("sender receiver", "fullname phone role");
+  return transaction; //.populate("sender receiver", "fullname email role");
 };
 
 const updateTransactionStatus = async (

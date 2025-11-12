@@ -8,14 +8,14 @@ import { Wallet } from "./wallet.model";
 const myWallet = async (userId: string) => {
   const info = await Wallet.findOne({ owner: userId }).populate(
     "owner",
-    "fullname phone role agentApproval"
+    "fullname phone email role agentApproval"
   );
   return info;
 };
 
 const addMoney = async (payload: Partial<ITransaction>) => {
-  const sender = await User.findOne({ phone: payload.sender });
-  const receiver = await User.findOne({ phone: payload.receiver });
+  const sender = await User.findOne({ email: payload.sender });
+  const receiver = await User.findOne({ email: payload.receiver });
   if (!sender)
     throw new AppError(StatusCodes.NOT_FOUND, "Sender does not exist");
 
@@ -41,8 +41,8 @@ const addMoney = async (payload: Partial<ITransaction>) => {
 };
 
 const withdrawMoney = async (payload: Partial<ITransaction>) => {
-  const sender = await User.findOne({ phone: payload.sender });
-  const receiver = await User.findOne({ phone: payload.receiver });
+  const sender = await User.findOne({ email: payload.sender });
+  const receiver = await User.findOne({ email: payload.receiver });
 
   if (!sender)
     throw new AppError(StatusCodes.NOT_FOUND, "Sender does not exist");
@@ -69,8 +69,8 @@ const withdrawMoney = async (payload: Partial<ITransaction>) => {
 };
 
 const sendMoney = async (payload: Partial<ITransaction>) => {
-  const sender = await User.findOne({ phone: payload.sender });
-  const receiver = await User.findOne({ phone: payload.receiver });
+  const sender = await User.findOne({ email: payload.sender });
+  const receiver = await User.findOne({ email: payload.receiver });
 
   if (!sender)
     throw new AppError(StatusCodes.NOT_FOUND, "Sender does not exist");
@@ -91,8 +91,8 @@ const sendMoney = async (payload: Partial<ITransaction>) => {
 };
 
 const cashIn = async (payload: Partial<ITransaction>) => {
-  const sender = await User.findOne({ phone: payload.sender });
-  const receiver = await User.findOne({ phone: payload.receiver });
+  const sender = await User.findOne({ email: payload.sender });
+  const receiver = await User.findOne({ email: payload.receiver });
 
   if (!sender)
     throw new AppError(StatusCodes.NOT_FOUND, "Sender does not exist");
@@ -120,8 +120,8 @@ const cashIn = async (payload: Partial<ITransaction>) => {
 };
 
 const cashOut = async (payload: Partial<ITransaction>) => {
-  const sender = await User.findOne({ phone: payload.sender });
-  const receiver = await User.findOne({ phone: payload.receiver });
+  const sender = await User.findOne({ email: payload.sender });
+  const receiver = await User.findOne({ email: payload.receiver });
 
   if (!sender) {
     throw new AppError(StatusCodes.NOT_FOUND, "Sender does not exist");
@@ -176,11 +176,21 @@ const getAllWallets = async (query: Record<string, string>) => {
     filter.owner = user._id;
   }
 
+  if (query.email) {
+    const user = await User.findOne({ email: query.email }, "_id");
+    if (!user)
+      throw new AppError(
+        StatusCodes.NOT_FOUND,
+        "Email doesn't associate with any user wallet"
+      );
+    filter.owner = user._id;
+  }
+
   const wallets = await Wallet.find(filter)
     .sort(sort)
     .skip(skip)
     .limit(limit)
-    .populate("owner", "fullname phone role agentApproval");
+    .populate("owner", "fullname email role agentApproval");
 
   const total = await Wallet.countDocuments(filter);
   const totalPages = Math.ceil(total / limit);
@@ -197,7 +207,7 @@ const getSingleWallet = async (walletId: string) => {
     throw new AppError(StatusCodes.NOT_FOUND, "Wallet not found");
   }
 
-  return wallet.populate("owner", "fullname phone role");
+  return wallet.populate("owner", "fullname email role");
 };
 
 const blockWallet = async (walletId: string) => {

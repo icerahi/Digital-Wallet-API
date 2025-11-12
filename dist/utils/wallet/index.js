@@ -42,6 +42,6 @@ const performCommonTransaction = (transactionType, senderId, receiverId, amount)
         amount,
         status: transaction_interface_1.TransactionStatus.COMPLETED,
     });
-    return transactionInfo.populate("sender receiver", "fullname phone role");
+    return transactionInfo.populate("sender receiver", "fullname email role");
 });
 exports.performCommonTransaction = performCommonTransaction;

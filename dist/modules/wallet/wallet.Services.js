@@ -19,12 +19,12 @@ const user_interface_1 = require("../user/user.interface");
 const user_model_1 = require("../user/user.model");
 const wallet_model_1 = require("./wallet.model");
 const myWallet = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const info = yield wallet_model_1.Wallet.findOne({ owner: userId }).populate("owner", "fullname phone role agentApproval");
+    const info = yield wallet_model_1.Wallet.findOne({ owner: userId }).populate("owner", "fullname phone email role agentApproval");
     return info;
 });
 const addMoney = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const sender = yield user_model_1.User.findOne({ phone: payload.sender });
-    const receiver = yield user_model_1.User.findOne({ phone: payload.receiver });
+    const sender = yield user_model_1.User.findOne({ email: payload.sender });
+    const receiver = yield user_model_1.User.findOne({ email: payload.receiver });
     if (!sender)
         throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Sender does not exist");
     if (!receiver) {
@@ -40,8 +40,8 @@ const addMoney = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return transactionInfo;
 });
 const withdrawMoney = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const sender = yield user_model_1.User.findOne({ phone: payload.sender });
-    const receiver = yield user_model_1.User.findOne({ phone: payload.receiver });
+    const sender = yield user_model_1.User.findOne({ email: payload.sender });
+    const receiver = yield user_model_1.User.findOne({ email: payload.receiver });
     if (!sender)
         throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Sender does not exist");
     if (!receiver) {
@@ -57,8 +57,8 @@ const withdrawMoney = (payload) => __awaiter(void 0, void 0, void 0, function* (
     return transactionInfo;
 });
 const sendMoney = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const sender = yield user_model_1.User.findOne({ phone: payload.sender });
-    const receiver = yield user_model_1.User.findOne({ phone: payload.receiver });
+    const sender = yield user_model_1.User.findOne({ email: payload.sender });
+    const receiver = yield user_model_1.User.findOne({ email: payload.receiver });
     if (!sender)
         throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Sender does not exist");
     if (!receiver)
@@ -70,8 +70,8 @@ const sendMoney = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return updatedWallet;
 });
 const cashIn = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const sender = yield user_model_1.User.findOne({ phone: payload.sender });
-    const receiver = yield user_model_1.User.findOne({ phone: payload.receiver });
+    const sender = yield user_model_1.User.findOne({ email: payload.sender });
+    const receiver = yield user_model_1.User.findOne({ email: payload.receiver });
     if (!sender)
         throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Sender does not exist");
     if (!receiver) {
@@ -87,8 +87,8 @@ const cashIn = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return transactionInfo;
 });
 const cashOut = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const sender = yield user_model_1.User.findOne({ phone: payload.sender });
-    const receiver = yield user_model_1.User.findOne({ phone: payload.receiver });
+    const sender = yield user_model_1.User.findOne({ email: payload.sender });
+    const receiver = yield user_model_1.User.findOne({ email: payload.receiver });
     if (!sender) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Sender does not exist");
     }
@@ -123,11 +123,17 @@ const getAllWallets = (query) => __awaiter(void 0, void 0, void 0, function* () 
             throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Number doesn't associate with any user wallet");
         filter.owner = user._id;
     }
+    if (query.email) {
+        const user = yield user_model_1.User.findOne({ email: query.email }, "_id");
+        if (!user)
+            throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Email doesn't associate with any user wallet");
+        filter.owner = user._id;
+    }
     const wallets = yield wallet_model_1.Wallet.find(filter)
         .sort(sort)
         .skip(skip)
         .limit(limit)
-        .populate("owner", "fullname phone role agentApproval");
+        .populate("owner", "fullname email role agentApproval");
     const total = yield wallet_model_1.Wallet.countDocuments(filter);
     const totalPages = Math.ceil(total / limit);
     return {
@@ -140,7 +146,7 @@ const getSingleWallet = (walletId) => __awaiter(void 0, void 0, void 0, function
     if (!wallet) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Wallet not found");
     }
-    return wallet.populate("owner", "fullname phone role");
+    return wallet.populate("owner", "fullname email role");
 });
 const blockWallet = (walletId) => __awaiter(void 0, void 0, void 0, function* () {
     const wallet = yield wallet_model_1.Wallet.findById(walletId);

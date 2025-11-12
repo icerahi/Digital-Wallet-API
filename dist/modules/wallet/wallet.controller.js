@@ -33,7 +33,7 @@ const addMoney = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void
     const decodedToken = req.user;
     const payload = {
         sender: req.body.sender,
-        receiver: decodedToken.phone,
+        receiver: decodedToken.email,
         amount: req.body.amount,
     };
     const wallet = yield wallet_Services_1.walletServices.addMoney(payload);
@@ -47,7 +47,7 @@ const addMoney = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void
 const withdrawMoney = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const decodedToken = req.user;
     const payload = {
-        sender: decodedToken.phone,
+        sender: decodedToken.email,
         receiver: req.body.receiver,
         amount: req.body.amount,
     };
@@ -62,7 +62,7 @@ const withdrawMoney = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter
 const sendMoney = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const decodedToken = req.user;
     const payload = {
-        sender: decodedToken.phone,
+        sender: decodedToken.email,
         receiver: req.body.receiver,
         amount: req.body.amount,
     };
@@ -80,7 +80,7 @@ const sendMoney = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(voi
 const cashIn = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const decodedToken = req.user;
     const payload = {
-        sender: decodedToken.phone,
+        sender: decodedToken.email,
         receiver: req.body.receiver,
         amount: req.body.amount,
     };
@@ -96,7 +96,7 @@ const cashOut = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 
     const decodedToken = req.user;
     const payload = {
         sender: req.body.sender,
-        receiver: decodedToken.phone,
+        receiver: decodedToken.email,
         amount: req.body.amount,
     };
     const transactionInfo = yield wallet_Services_1.walletServices.cashOut(payload);

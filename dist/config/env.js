@@ -16,7 +16,7 @@ const loadEnvVariables = () => {
         "JWT_ACCESS_TOKEN_EXPIRES",
         "JWT_REFRESH_TOKEN_SECRET",
         "JWT_REFRESH_TOKEN_EXPIRES",
-        "SUPER_ADMIN_PHONE",
+        "SUPER_ADMIN_EMAIL",
         "SUPER_ADMIN_PASSWORD",
         "FRONTEND_URL",
     ];
@@ -35,7 +35,7 @@ const loadEnvVariables = () => {
         JWT_ACCESS_TOKEN_EXPIRES: process.env.JWT_ACCESS_TOKEN_EXPIRES,
         JWT_REFRESH_TOKEN_SECRET: process.env.JWT_REFRESH_TOKEN_SECRET,
         JWT_REFRESH_TOKEN_EXPIRES: process.env.JWT_REFRESH_TOKEN_EXPIRES,
-        SUPER_ADMIN_PHONE: process.env.SUPER_ADMIN_PHONE,
+        SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL,
         SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD,
         FRONTEND_URL: process.env.FRONTEND_URL,
     };

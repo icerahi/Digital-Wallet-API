@@ -10,7 +10,8 @@ export enum Role {
 export interface IUser {
   _id?: Types.ObjectId;
   fullname: string;
-  phone: string;
+  phone?: string;
+  email: string;
   password: string;
   role?: Role;
   agentApproval?: boolean;

@@ -15,7 +15,8 @@ const wallet_model_1 = require("../wallet/wallet.model");
 const user_interface_1 = require("./user.interface");
 const userSchema = new mongoose_1.Schema({
     fullname: { type: String, required: true },
-    phone: { type: String, required: true, unique: true },
+    phone: { type: String, unique: true },
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
     role: { type: String, enum: Object.values(user_interface_1.Role), default: user_interface_1.Role.USER },
     agentApproval: { type: Boolean, default: undefined },

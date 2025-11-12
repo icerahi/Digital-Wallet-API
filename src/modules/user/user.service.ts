@@ -8,13 +8,20 @@ import { IUser, Role } from "./user.interface";
 import { User } from "./user.model";
 
 const register = async (payload: IUser) => {
-  const { phone, password, ...rest } = payload;
+  const { email, phone, password, ...rest } = payload;
 
-  const isUserExist = await User.findOne({ phone });
-  if (isUserExist)
+  const isPhoneExist = await User.findOne({ phone });
+  if (isPhoneExist)
     throw new AppError(
       StatusCodes.BAD_REQUEST,
       "User already exist with the Phone Number"
+    );
+
+  const isEmailExist = await User.findOne({ email });
+  if (isEmailExist)
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      "User already exist with the email address"
     );
 
   const hashedPassword = await bcrypt.hash(
@@ -22,7 +29,12 @@ const register = async (payload: IUser) => {
     Number(envVars.BCRYPT_SALT_ROUND)
   );
 
-  const user = await User.create({ phone, password: hashedPassword, ...rest });
+  const user = await User.create({
+    email,
+    phone,
+    password: hashedPassword,
+    ...rest,
+  });
   const { password: pass, ...userInfo } = user.toObject();
   return userInfo;
 };
@@ -79,6 +91,12 @@ const updateUser = async (userId: string, payload: Record<string, string>) => {
       );
   }
 
+  if (payload.email) {
+    const emailExist = await User.findOne({ email: payload.email });
+    if (emailExist)
+      throw new AppError(StatusCodes.BAD_REQUEST, "Email already exist");
+  }
+
   const user = await User.findOneAndUpdate({ _id: userId }, payload, {
     new: true,
     runValidators: true,
@@ -95,6 +113,7 @@ const getAllUsers = async (query: Record<string, string>) => {
 
   if (query.role) filter.role = query.role;
   if (query.phone) filter.phone = query.phone;
+  if (query.email) filter.email = query.email;
 
   if (query.agentApproval) filter.agentApproval = query.agentApproval;
 

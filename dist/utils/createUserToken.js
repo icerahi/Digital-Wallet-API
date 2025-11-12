@@ -6,7 +6,7 @@ const jwt_1 = require("./jwt");
 const createUserToken = (user) => {
     const jwtPayload = {
         userId: user._id,
-        phone: user.phone,
+        email: user.email,
         role: user.role,
     };
     const accessToken = (0, jwt_1.generateToken)(jwtPayload, env_1.envVars.JWT_ACCESS_TOKEN_SECRET, env_1.envVars.JWT_ACCESS_TOKEN_EXPIRES);

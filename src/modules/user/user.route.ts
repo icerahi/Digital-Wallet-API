@@ -45,7 +45,7 @@ router.patch(
 );
 
 //only admin access
-router.get("/all-users", checkAuth(Role.ADMIN), userControllers.getAllUsers); //accept query=role and/or phone
+router.get("/all-users", checkAuth(Role.ADMIN), userControllers.getAllUsers); //accept query=role and/or email
 router.get("/:id", checkAuth(Role.ADMIN), userControllers.getSingleUser);
 
 export const UserRoutes = router;

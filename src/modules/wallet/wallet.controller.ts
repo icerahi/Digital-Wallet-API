@@ -28,7 +28,7 @@ const addMoney = catchAsync(
 
     const payload = {
       sender: req.body.sender,
-      receiver: decodedToken.phone,
+      receiver: decodedToken.email,
       amount: req.body.amount,
     };
     const wallet = await walletServices.addMoney(payload);
@@ -47,7 +47,7 @@ const withdrawMoney = catchAsync(
     const decodedToken = req.user;
 
     const payload = {
-      sender: decodedToken.phone,
+      sender: decodedToken.email,
       receiver: req.body.receiver,
       amount: req.body.amount,
     };
@@ -67,7 +67,7 @@ const sendMoney = catchAsync(
     const decodedToken = req.user;
 
     const payload = {
-      sender: decodedToken.phone,
+      sender: decodedToken.email,
       receiver: req.body.receiver,
       amount: req.body.amount,
     };
@@ -93,7 +93,7 @@ const cashIn = catchAsync(
     const decodedToken = req.user;
 
     const payload = {
-      sender: decodedToken.phone,
+      sender: decodedToken.email,
       receiver: req.body.receiver,
       amount: req.body.amount,
     };
@@ -114,7 +114,7 @@ const cashOut = catchAsync(
 
     const payload = {
       sender: req.body.sender,
-      receiver: decodedToken.phone,
+      receiver: decodedToken.email,
       amount: req.body.amount,
     };
     const transactionInfo = await walletServices.cashOut(payload);

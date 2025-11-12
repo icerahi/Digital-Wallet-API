@@ -7,11 +7,8 @@ exports.createUserZodSchema = zod_1.z.object({
     fullname: zod_1.z
         .string({ invalid_type_error: "Fullname must be string" })
         .min(2, { message: "Fullname atleast 2 charecter long" }),
-    phone: zod_1.z
-        .string({ invalid_type_error: "Phone number must be string" })
-        .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
-        message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
-    }),
+    phone: zod_1.z.string({ invalid_type_error: "Phone number must be string" }),
+    email: zod_1.z.string().email(),
     password: zod_1.z
         .string({ invalid_type_error: "Password must be string" })
         .min(8, { message: "Password must be at least 8 charecter." })
@@ -33,10 +30,8 @@ exports.updateUserZodSchema = zod_1.z.object({
         .optional(),
     phone: zod_1.z
         .string({ invalid_type_error: "Phone number must be string" })
-        .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
-        message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
-    })
         .optional(),
+    email: zod_1.z.string().email(),
 });
 exports.chanagePasswordZodSchema = zod_1.z.object({
     currentPassword: zod_1.z

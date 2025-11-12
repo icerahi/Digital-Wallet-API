@@ -20,7 +20,7 @@ const user_model_1 = require("../modules/user/user.model");
 const seedSuperAdmin = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const isSuperAdminExist = yield user_model_1.User.findOne({
-            phone: env_1.envVars.SUPER_ADMIN_PHONE,
+            email: env_1.envVars.SUPER_ADMIN_EMAIL,
         });
         if (isSuperAdminExist) {
             console.log("Super Admin already exists");
@@ -31,7 +31,7 @@ const seedSuperAdmin = () => __awaiter(void 0, void 0, void 0, function* () {
         const payload = {
             fullname: "Super Admin",
             role: user_interface_1.Role.SUPERADMIN,
-            phone: env_1.envVars.SUPER_ADMIN_PHONE,
+            email: env_1.envVars.SUPER_ADMIN_EMAIL,
             password: hashedPassword,
         };
         const superAdmin = yield user_model_1.User.create(payload);
