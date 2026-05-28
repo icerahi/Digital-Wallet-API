@@ -4,7 +4,7 @@ Welcome to the Digital Wallet API, secure and modular backend system built with 
 
 ---
 
-## 🚀 Overview
+##  Overview
 
 This API provides a scalable foundation for a digital wallet system. It includes:
 
