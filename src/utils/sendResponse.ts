@@ -4,12 +4,19 @@ interface TMeta {
   total: number;
 }
 
+export interface THateoasLink {
+  href: string;
+  rel: string;
+  type: string;
+}
+
 interface TResponse<T> {
   statusCode: number;
   success: boolean;
   message: string;
   data: T;
   meta?: TMeta;
+  links?: THateoasLink[];
 }
 
 export const sendResponse = <T>(res: Response, data: TResponse<T>) => {
@@ -19,5 +26,6 @@ export const sendResponse = <T>(res: Response, data: TResponse<T>) => {
     message: data.message,
     meta: data.meta,
     data: data.data,
+    links: data.links,
   });
 };

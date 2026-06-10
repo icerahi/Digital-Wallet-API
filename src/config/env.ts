@@ -14,6 +14,7 @@ interface EnvConfig {
   SUPER_ADMIN_PHONE: string;
   SUPER_ADMIN_PASSWORD: string;
   FRONTEND_URL: string;
+  RAPIDAPI_KEY: string;
 }
 
 const loadEnvVariables = (): EnvConfig => {
@@ -29,6 +30,7 @@ const loadEnvVariables = (): EnvConfig => {
     "SUPER_ADMIN_PHONE",
     "SUPER_ADMIN_PASSWORD",
     "FRONTEND_URL",
+    "RAPIDAPI_KEY",
   ];
 
   requiredEnvVariables.forEach((key) => {
@@ -50,6 +52,7 @@ const loadEnvVariables = (): EnvConfig => {
     SUPER_ADMIN_PHONE: process.env.SUPER_ADMIN_PHONE as string,
     SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD as string,
     FRONTEND_URL: process.env.FRONTEND_URL as string,
+    RAPIDAPI_KEY: process.env.RAPIDAPI_KEY as string,
   };
 };
 

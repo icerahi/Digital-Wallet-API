@@ -18,6 +18,11 @@ const myWallet = catchAsync(
       statusCode: StatusCodes.OK,
       message: "User Wallet retrieved successfully",
       data: info,
+      links: [
+        { href: "/api/v1/wallets/add-money", rel: "add-money", type: "POST" },
+        { href: "/api/v1/wallets/withdraw-money", rel: "withdraw-money", type: "POST" },
+        { href: "/api/v1/wallets/send-money", rel: "send-money", type: "POST" },
+      ],
     });
   }
 );

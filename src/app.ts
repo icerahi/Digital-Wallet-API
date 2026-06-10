@@ -5,8 +5,10 @@ import { envVars } from "./config/env";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 import notFound from "./middlewares/notFound";
 import { router } from "./routes";
+import { setupSwagger } from "./config/swagger";
 
 const app = express();
+setupSwagger(app);
 
 app.use(express.json());
 app.use(
