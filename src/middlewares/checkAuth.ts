@@ -11,7 +11,11 @@ export const checkAuth =
   (...authRoles: string[]) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const accessToken = req.cookies.accessToken || req.headers.authorization;
+      let accessToken = req.cookies.accessToken || req.headers.authorization;
+
+      if (accessToken && accessToken.startsWith('Bearer ')) {
+        accessToken = accessToken.split(' ')[1];
+      }
 
       if (!accessToken)
         throw new AppError(StatusCodes.FORBIDDEN, "No token recieved");

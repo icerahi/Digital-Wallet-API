@@ -24,7 +24,7 @@ In accordance with Agile methodology and the final project requirements, our tea
 **Responsibilities:**
 - Gathering requirements and drafting `REQUIREMENTS.md` (Product Backlog).
 - Managing the Trello board to track Sprints.
-- Facilitating Agile Planning Poker and story point estimation.
+- Managing task priorities and Agile workflows.
 - Defining User Stories and Acceptance Criteria.
 - Ensuring the team follows Agile best practices and meets deadlines.
 

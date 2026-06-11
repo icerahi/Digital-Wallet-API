@@ -52,6 +52,41 @@ Then('a wallet should be automatically provisioned', async function () {
   expect(wallet.balance).to.equal(50); // Mongoose default is likely 50
 });
 
+Given('a registered user with phone {string} and password {string}', function (phone, password) {
+  userData = { phone, password };
+});
+
+When('the user logs in', async function () {
+  response = await request(app)
+    .post('/api/v1/auth/login')
+    .send(userData);
+  if (response.body.data && response.body.data.accessToken) {
+    token = response.body.data.accessToken;
+  }
+});
+
+Then('the response should contain an access token', function () {
+  expect(response.body.data.accessToken).to.exist;
+});
+
+Given('an authenticated user', async function () {
+  userData = { fullname: 'Auth User', phone: '01888888888', password: 'Pass@123', role: 'USER' };
+  await request(app).post('/api/v1/users/register').send(userData);
+  const loginRes = await request(app).post('/api/v1/auth/login').send({ phone: userData.phone, password: userData.password });
+  token = loginRes.body.data?.accessToken;
+});
+
+When('the user requests their wallet balance', async function () {
+  response = await request(app)
+    .get('/api/v1/wallets/me')
+    .set('Authorization', `Bearer ${token}`);
+  if(response.status !== 200) console.log("Wallet Error:", response.body);
+});
+
+Then('the response should contain the wallet balance', function () {
+  expect(response.body.data.balance).to.exist;
+  expect(response.body.data.balance).to.equal(50);
+});
 Given('the external API endpoint is available', function () {
   // No-op for given, assume server is running
 });
