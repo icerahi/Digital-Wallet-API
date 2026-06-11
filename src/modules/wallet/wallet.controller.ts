@@ -90,6 +90,10 @@ const sendMoney = catchAsync(
       statusCode: StatusCodes.OK,
       message: "Send money successfully",
       data: wallet,
+      links: [
+        { href: "/api/v1/transactions", rel: "transaction-history", type: "GET" },
+        { href: "/api/v1/wallets/me", rel: "my-wallet", type: "GET" }
+      ]
     });
   }
 );

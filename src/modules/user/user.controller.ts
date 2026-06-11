@@ -16,6 +16,9 @@ const register = catchAsync(
       success: true,
       message: "User created successfully",
       data: user,
+      links: [
+        { href: "/api/v1/auth/login", rel: "login", type: "POST" }
+      ]
     });
   }
 );

@@ -22,12 +22,12 @@ router.get("/me", checkAuth(...Object.values(Role)), userControllers.getMe);
 //possible to approved user as agent
 router.patch(
   "/approve-agent/:id",
-  checkAuth(Role.ADMIN),
+  checkAuth(Role.SUPERADMIN,Role.ADMIN),
   userControllers.approveAgent
 );
 router.patch(
   "/suspend-agent/:id",
-  checkAuth(Role.ADMIN),
+  checkAuth(Role.SUPERADMIN,Role.ADMIN),
   userControllers.suspendAgent
 );
 
@@ -45,7 +45,7 @@ router.patch(
 );
 
 //only admin access
-router.get("/all-users", checkAuth(Role.ADMIN), userControllers.getAllUsers); //accept query=role and/or phone
-router.get("/:id", checkAuth(Role.ADMIN), userControllers.getSingleUser);
+router.get("/all-users", checkAuth(Role.SUPERADMIN, Role.ADMIN), userControllers.getAllUsers); //accept query=role and/or phone
+router.get("/:id", checkAuth(Role.SUPERADMIN,Role.ADMIN), userControllers.getSingleUser);
 
 export const UserRoutes = router;

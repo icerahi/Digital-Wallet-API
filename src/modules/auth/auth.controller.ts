@@ -19,6 +19,9 @@ const credentialLogin = catchAsync(
       statusCode: StatusCodes.OK,
       message: "Login successful",
       data: loginInfo,
+      links: [
+        { href: "/api/v1/wallets/me", rel: "my-wallet", type: "GET" }
+      ]
     });
   }
 );
