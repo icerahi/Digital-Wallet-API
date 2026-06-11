@@ -5,6 +5,16 @@ import { credentialLoginZodSchema } from "./auth.validation";
 
 const router = Router();
 
+/**
+ * @swagger
+ * /api/v1/auth/login:
+ *   post:
+ *     summary: Log in a user
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Login successful
+ */
 router.post(
   "/login",
   validateRequest(credentialLoginZodSchema),

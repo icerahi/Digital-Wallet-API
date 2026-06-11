@@ -11,6 +11,16 @@ import {
 
 const router = Router();
 
+/**
+ * @swagger
+ * /api/v1/users/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Users]
+ *     responses:
+ *       201:
+ *         description: User created
+ */
 router.post(
   "/register",
   validateRequest(createUserZodSchema),

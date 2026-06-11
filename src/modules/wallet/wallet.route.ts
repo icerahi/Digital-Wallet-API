@@ -11,6 +11,18 @@ import {
 const router = Router();
 
 //Both User & Agent Access
+/**
+ * @swagger
+ * /api/v1/wallets/me:
+ *   get:
+ *     summary: Get my wallet
+ *     tags: [Wallets]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Wallet retrieved
+ */
 router.get("/me", checkAuth(Role.USER, Role.AGENT), walletControllers.myWallet);
 
 //only User Access
@@ -26,6 +38,18 @@ router.post(
   validateRequest(sendWithdrawAndCashInZodSchema),
   walletControllers.withdrawMoney
 );
+/**
+ * @swagger
+ * /api/v1/wallets/send-money:
+ *   post:
+ *     summary: Send money to another user (P2P)
+ *     tags: [Wallets]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Money sent successfully
+ */
 router.post(
   "/send-money",
   checkAuth(Role.USER),
